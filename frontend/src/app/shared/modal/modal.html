@@ -1,0 +1,16 @@
+@if (noti.actual(); as n) {
+  <div class="overlay" (click)="noti.cerrar()">
+    <div class="modal" [class]="n.tipo" (click)="$event.stopPropagation()">
+      <div class="icono">
+        @switch (n.tipo) {
+          @case ('exito') { ✓ }
+          @case ('error') { ✕ }
+          @default { i }
+        }
+      </div>
+      <h3>{{ n.titulo }}</h3>
+      <p>{{ n.mensaje }}</p>
+      <button class="btn btn-primary btn-bloque" (click)="noti.cerrar()">Entendido</button>
+    </div>
+  </div>
+}

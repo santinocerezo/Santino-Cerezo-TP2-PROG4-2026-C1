@@ -1,0 +1,33 @@
+<section class="hero">
+  @if (auth.estaLogueado()) {
+    <h1>¡Hola, {{ auth.usuario()?.nombre }}! 👋</h1>
+    <p>Bienvenido/a a la Red Social. Acá vas a ver y crear publicaciones.</p>
+  } @else {
+    <h1>Bienvenido/a a la Red Social</h1>
+    <p>Iniciá sesión o creá una cuenta para empezar a publicar.</p>
+    <div class="hero-acciones">
+      <a routerLink="/login" class="btn btn-secundario">Ingresar</a>
+      <a routerLink="/registro" class="btn btn-primary">Crear cuenta</a>
+    </div>
+  }
+</section>
+
+<section class="feed">
+  <div class="feed-cabecera">
+    <h2>Publicaciones</h2>
+  </div>
+
+  <!-- El listado real de publicaciones se implementa en el Sprint 2.
+       Por ahora mostramos un aviso para no adelantar contenido. -->
+  <div class="card aviso">
+    <div class="aviso-icono">📝</div>
+    <div>
+      <h3>El feed de publicaciones llega en el Sprint 2</h3>
+      <p class="ayuda-texto">
+        En esta entrega (Sprint 1) ya están listos el registro, el login y la
+        navegación entre pantallas. El listado, los "me gusta" y la creación de
+        publicaciones se suman en el próximo sprint.
+      </p>
+    </div>
+  </div>
+</section>
