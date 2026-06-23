@@ -1,0 +1,34 @@
+# Dependencias
+node_modules/
+**/node_modules/
+
+# Builds
+dist/
+**/dist/
+.angular/
+**/.angular/
+build/
+
+# Variables de entorno (NUNCA subir credenciales)
+.env
+**/.env
+*.local
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Imágenes subidas localmente (usamos Cloudinary en deploy)
+backend/uploads/
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Coverage / tests
+coverage/
+**/coverage/
