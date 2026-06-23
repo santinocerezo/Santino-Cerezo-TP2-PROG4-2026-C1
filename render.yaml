@@ -1,0 +1,39 @@
+# Blueprint de Render para desplegar los dos proyectos.
+# Podés usar este archivo (Render -> New -> Blueprint) o configurar cada
+# servicio a mano en el dashboard (ver DEPLOY.md).
+
+services:
+  # ---------------- Backend NestJS (Web Service) ----------------
+  - type: web
+    name: red-social-backend
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    healthCheckPath: /
+    envVars:
+      # Estas variables se cargan en el dashboard (son secretas).
+      - key: FRONTEND_URL
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+
+  # ---------------- Frontend Angular (Static Site) ----------------
+  - type: web
+    name: red-social-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist/frontend/browser
+    # Reescritura para que el routing de Angular funcione al refrescar.
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
