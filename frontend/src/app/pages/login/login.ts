@@ -48,7 +48,7 @@ export class Login {
     this.auth.login(identificador, password).subscribe({
       next: () => {
         this.cargando.set(false);
-        this.router.navigate(['/publicaciones']);
+        this.router.navigate(['/']);
       },
       error: (err) => {
         this.cargando.set(false);

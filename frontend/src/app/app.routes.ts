@@ -6,10 +6,10 @@ import { MiPerfil } from './pages/mi-perfil/mi-perfil';
 
 // Sprint 1: navegación libre entre las 4 pantallas (sin guards de acceso).
 export const routes: Routes = [
-  { path: '', redirectTo: 'publicaciones', pathMatch: 'full' },
+  // La raíz muestra Publicaciones directamente (sin que aparezca /publicaciones en la URL).
+  { path: '', component: Publicaciones, title: 'Publicaciones' },
   { path: 'login', component: Login, title: 'Iniciar sesión' },
   { path: 'registro', component: Registro, title: 'Crear cuenta' },
-  { path: 'publicaciones', component: Publicaciones, title: 'Publicaciones' },
   { path: 'mi-perfil', component: MiPerfil, title: 'Mi perfil' },
-  { path: '**', redirectTo: 'publicaciones' },
+  { path: '**', redirectTo: '' },
 ];
