@@ -1,0 +1,30 @@
+<header class="navbar">
+  <div class="navbar-inner">
+    <a routerLink="/publicaciones" class="marca">
+      <span class="marca-logo">RS</span>
+      <span class="marca-texto">Red Social</span>
+    </a>
+
+    <nav class="links">
+      <a routerLink="/publicaciones" routerLinkActive="activo">Publicaciones</a>
+      <a routerLink="/mi-perfil" routerLinkActive="activo">Mi perfil</a>
+    </nav>
+
+    <div class="acciones">
+      @if (auth.estaLogueado()) {
+        <a routerLink="/mi-perfil" class="usuario-chip" title="Ver mi perfil">
+          @if (auth.usuario()?.fotoPerfil) {
+            <img [src]="auth.usuario()!.fotoPerfil" [alt]="auth.usuario()?.nombreUsuario" />
+          } @else {
+            <span class="avatar-iniciales">{{ inicial() }}</span>
+          }
+          <span class="usuario-nombre">{{ auth.usuario()?.nombreUsuario }}</span>
+        </a>
+        <button class="btn btn-secundario btn-sm" (click)="cerrarSesion()">Salir</button>
+      } @else {
+        <a routerLink="/login" class="btn btn-secundario btn-sm">Ingresar</a>
+        <a routerLink="/registro" class="btn btn-primary btn-sm">Crear cuenta</a>
+      }
+    </div>
+  </div>
+</header>

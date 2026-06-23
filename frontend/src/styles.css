@@ -1,0 +1,210 @@
+/* ============================================================
+   ESTILOS GLOBALES - Red Social TP2
+   Diseño uniforme: tokens de color, tipografía, botones,
+   inputs, cards y utilidades reutilizables en toda la app.
+   ============================================================ */
+
+:root {
+  /* Colores */
+  --primario: #4f46e5;
+  --primario-osc: #4338ca;
+  --primario-claro: #eef2ff;
+  --acento: #ec4899;
+  --exito: #16a34a;
+  --error: #dc2626;
+  --info: #2563eb;
+
+  --texto: #1e293b;
+  --texto-suave: #64748b;
+  --borde: #e2e8f0;
+  --fondo: #f1f5f9;
+  --blanco: #ffffff;
+
+  /* Otros */
+  --radio: 14px;
+  --sombra: 0 10px 30px rgba(2, 6, 23, 0.08);
+  --sombra-sm: 0 2px 8px rgba(2, 6, 23, 0.06);
+  --trans: 0.2s ease;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--texto);
+  background:
+    radial-gradient(1200px 600px at 100% -10%, #ede9fe 0%, transparent 55%),
+    radial-gradient(1000px 500px at -10% 0%, #fce7f3 0%, transparent 45%),
+    var(--fondo);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { margin: 0 0 0.5rem; line-height: 1.2; }
+a { color: var(--primario); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---------- Layout ---------- */
+.contenido {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.centrado-vertical {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 2rem;
+}
+
+.card-titulo {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.subtitulo {
+  color: var(--texto-suave);
+  margin-bottom: 1.5rem;
+}
+
+/* ---------- Formularios ---------- */
+.form-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.1rem;
+}
+
+.form-fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid var(--borde);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--texto);
+  background: var(--blanco);
+  transition: border-color var(--trans), box-shadow var(--trans);
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primario);
+  box-shadow: 0 0 0 4px var(--primario-claro);
+}
+
+input.invalido, select.invalido, textarea.invalido {
+  border-color: var(--error);
+}
+
+textarea { resize: vertical; min-height: 80px; }
+
+.error-texto {
+  color: var(--error);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.ayuda-texto {
+  color: var(--texto-suave);
+  font-size: 0.8rem;
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform var(--trans), box-shadow var(--trans), background var(--trans);
+}
+
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn:not(:disabled):hover { transform: translateY(-1px); }
+
+.btn-primary {
+  background: var(--primario);
+  color: var(--blanco);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+}
+.btn-primary:not(:disabled):hover { background: var(--primario-osc); }
+
+.btn-secundario {
+  background: var(--blanco);
+  color: var(--primario);
+  border: 1.5px solid var(--borde);
+}
+
+.btn-bloque { width: 100%; }
+
+/* ---------- Badges ---------- */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--primario-claro);
+  color: var(--primario-osc);
+  text-transform: capitalize;
+}
+.badge.admin { background: #fce7f3; color: #be185d; }
+
+/* ---------- Utilidades ---------- */
+.texto-centro { text-align: center; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.flex { display: flex; gap: 0.75rem; align-items: center; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+
+/* Spinner de carga dentro de botones */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid rgba(255, 255, 255, 0.5);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: girar 0.7s linear infinite;
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+
+/* Responsive */
+@media (max-width: 560px) {
+  .form-fila { grid-template-columns: 1fr; }
+  .card { padding: 1.5rem; }
+}
