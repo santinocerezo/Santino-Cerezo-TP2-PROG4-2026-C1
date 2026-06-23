@@ -59,3 +59,36 @@
 .dato-valor { font-weight: 600; text-align: right; }
 
 .sin-sesion { max-width: 420px; margin: 3rem auto; }
+
+.mis-pubs {
+  max-width: 640px;
+  margin: 1.25rem auto 0;
+}
+.mis-pubs h2 { font-size: 1.2rem; margin-bottom: 1rem; }
+
+.mini-pub {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--borde);
+}
+.mini-pub:last-of-type { border-bottom: none; }
+
+.mini-pub-cabecera {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+}
+.mini-pub-titulo { font-weight: 700; }
+.mini-pub-fecha { color: var(--texto-suave); font-size: 0.78rem; white-space: nowrap; }
+.mini-pub-desc {
+  margin: 0.25rem 0;
+  color: #334155;
+  font-size: 0.9rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.mini-pub-likes { color: var(--acento); font-size: 0.8rem; font-weight: 600; }
+
+.ver-todas { display: inline-block; margin-top: 1rem; font-weight: 600; }
