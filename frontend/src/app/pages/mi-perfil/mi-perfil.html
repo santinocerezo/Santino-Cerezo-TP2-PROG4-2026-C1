@@ -1,0 +1,45 @@
+@if (auth.usuario(); as u) {
+  <div class="perfil-card card">
+    <div class="perfil-cabecera">
+      <div class="perfil-avatar">
+        @if (u.fotoPerfil) {
+          <img [src]="u.fotoPerfil" [alt]="u.nombreUsuario" />
+        } @else {
+          <span>{{ inicial() }}</span>
+        }
+      </div>
+      <div class="perfil-titulo">
+        <h1>{{ u.nombre }} {{ u.apellido }}</h1>
+        <p class="usuario">&#64;{{ u.nombreUsuario }}</p>
+        <span class="badge" [class.admin]="u.perfil === 'administrador'">{{ u.perfil }}</span>
+      </div>
+    </div>
+
+    @if (u.descripcion) {
+      <p class="perfil-descripcion">{{ u.descripcion }}</p>
+    }
+
+    <div class="perfil-datos">
+      <div class="dato">
+        <span class="dato-label">Correo</span>
+        <span class="dato-valor">{{ u.correo }}</span>
+      </div>
+      <div class="dato">
+        <span class="dato-label">Fecha de nacimiento</span>
+        <span class="dato-valor">{{ u.fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
+      </div>
+      <div class="dato">
+        <span class="dato-label">Miembro desde</span>
+        <span class="dato-valor">{{ u.createdAt | date: 'dd/MM/yyyy' }}</span>
+      </div>
+    </div>
+
+    <!-- "Últimas 3 publicaciones y comentarios" se agregan en el Sprint 2. -->
+  </div>
+} @else {
+  <div class="card texto-centro sin-sesion">
+    <h2>No iniciaste sesión</h2>
+    <p class="ayuda-texto">Ingresá para ver tu perfil.</p>
+    <a routerLink="/login" class="btn btn-primary mt-1">Iniciar sesión</a>
+  </div>
+}
