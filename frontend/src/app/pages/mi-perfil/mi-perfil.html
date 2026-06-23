@@ -33,8 +33,28 @@
         <span class="dato-valor">{{ u.createdAt | date: 'dd/MM/yyyy' }}</span>
       </div>
     </div>
+  </div>
 
-    <!-- "Últimas 3 publicaciones y comentarios" se agregan en el Sprint 2. -->
+  <!-- Últimas 3 publicaciones del usuario -->
+  <div class="card mis-pubs">
+    <h2>Mis últimas publicaciones</h2>
+    @if (cargando()) {
+      <p class="ayuda-texto">Cargando...</p>
+    } @else if (misPublicaciones().length === 0) {
+      <p class="ayuda-texto">Todavía no publicaste nada.</p>
+    } @else {
+      @for (pub of misPublicaciones(); track pub._id) {
+        <div class="mini-pub">
+          <div class="mini-pub-cabecera">
+            <span class="mini-pub-titulo">{{ pub.titulo }}</span>
+            <span class="mini-pub-fecha">{{ pub.createdAt | date: 'dd/MM/yyyy' }}</span>
+          </div>
+          <p class="mini-pub-desc">{{ pub.descripcion }}</p>
+          <span class="mini-pub-likes">♥ {{ pub.cantidadMeGusta }} me gusta</span>
+        </div>
+      }
+      <a routerLink="/" class="ayuda-texto ver-todas">Ver todas las publicaciones →</a>
+    }
   </div>
 } @else {
   <div class="card texto-centro sin-sesion">

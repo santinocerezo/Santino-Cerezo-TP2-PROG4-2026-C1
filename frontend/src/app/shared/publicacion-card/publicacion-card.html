@@ -1,0 +1,41 @@
+<article class="pub">
+  <header class="pub-head">
+    <div class="pub-autor">
+      <div class="autor-avatar">
+        @if (publicacion.autor?.fotoPerfil) {
+          <img [src]="publicacion.autor.fotoPerfil" [alt]="publicacion.autor.nombreUsuario" />
+        } @else {
+          <span>{{ inicialAutor() }}</span>
+        }
+      </div>
+      <div class="autor-info">
+        <span class="autor-nombre">{{ publicacion.autor?.nombre }} {{ publicacion.autor?.apellido }}</span>
+        <span class="autor-usuario">&#64;{{ publicacion.autor?.nombreUsuario }}</span>
+      </div>
+    </div>
+    <span class="pub-fecha">{{ publicacion.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+  </header>
+
+  <h3 class="pub-titulo">{{ publicacion.titulo }}</h3>
+  <p class="pub-desc">{{ publicacion.descripcion }}</p>
+
+  @if (publicacion.imagen) {
+    <img class="pub-img" [src]="publicacion.imagen" [alt]="publicacion.titulo" />
+  }
+
+  <footer class="pub-acciones">
+    <button
+      class="like-btn"
+      [class.activo]="yaDiMeGusta()"
+      [disabled]="!estaLogueado()"
+      [title]="estaLogueado() ? '' : 'Iniciá sesión para dar me gusta'"
+      (click)="meGusta.emit()"
+    >
+      <span class="corazon">♥</span> {{ publicacion.cantidadMeGusta }}
+    </button>
+
+    @if (puedeEliminar()) {
+      <button class="borrar-btn" (click)="eliminar.emit()">🗑 Eliminar</button>
+    }
+  </footer>
+</article>

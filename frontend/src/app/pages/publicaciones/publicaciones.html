@@ -1,10 +1,10 @@
 <section class="hero">
   @if (auth.estaLogueado()) {
     <h1>¡Hola, {{ auth.usuario()?.nombre }}! 👋</h1>
-    <p>Bienvenido/a a la Red Social. Acá vas a ver y crear publicaciones.</p>
+    <p>Compartí algo con la comunidad o mirá las últimas publicaciones.</p>
   } @else {
     <h1>Bienvenido/a a la Red Social</h1>
-    <p>Iniciá sesión o creá una cuenta para empezar a publicar.</p>
+    <p>Iniciá sesión o creá una cuenta para publicar y dar me gusta.</p>
     <div class="hero-acciones">
       <a routerLink="/login" class="btn btn-secundario">Ingresar</a>
       <a routerLink="/registro" class="btn btn-primary">Crear cuenta</a>
@@ -12,22 +12,67 @@
   }
 </section>
 
-<section class="feed">
-  <div class="feed-cabecera">
-    <h2>Publicaciones</h2>
+<!-- Crear publicación (solo logueado) -->
+@if (auth.estaLogueado()) {
+  <div class="card crear-zona">
+    @if (!mostrarFormulario()) {
+      <button class="btn btn-primary" (click)="mostrarFormulario.set(true)">+ Nueva publicación</button>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="crear()">
+        <h3>Nueva publicación</h3>
+        <div class="form-grupo">
+          <label for="titulo">Título</label>
+          <input id="titulo" type="text" formControlName="titulo" [class.invalido]="esInvalido('titulo')" />
+          @if (esInvalido('titulo')) { <span class="error-texto">El título es obligatorio (máx. 120).</span> }
+        </div>
+        <div class="form-grupo">
+          <label for="descripcion">Mensaje</label>
+          <textarea id="descripcion" formControlName="descripcion" [class.invalido]="esInvalido('descripcion')"></textarea>
+          @if (esInvalido('descripcion')) { <span class="error-texto">El mensaje es obligatorio.</span> }
+        </div>
+        <div class="form-grupo">
+          <label for="imagen" class="btn btn-secundario btn-sm">Adjuntar imagen (opcional)</label>
+          <input id="imagen" type="file" accept="image/*" (change)="alSeleccionarArchivo($event)" hidden />
+          @if (preview()) { <img class="preview-img" [src]="preview()" alt="Vista previa" /> }
+        </div>
+        <div class="crear-botones">
+          <button type="button" class="btn btn-secundario" (click)="mostrarFormulario.set(false)">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="creando()">
+            @if (creando()) { <span class="spinner"></span> Publicando... } @else { Publicar }
+          </button>
+        </div>
+      </form>
+    }
   </div>
+}
 
-  <!-- El listado real de publicaciones se implementa en el Sprint 2.
-       Por ahora mostramos un aviso para no adelantar contenido. -->
-  <div class="card aviso">
-    <div class="aviso-icono">📝</div>
-    <div>
-      <h3>El feed de publicaciones llega en el Sprint 2</h3>
-      <p class="ayuda-texto">
-        En esta entrega (Sprint 1) ya están listos el registro, el login y la
-        navegación entre pantallas. El listado, los "me gusta" y la creación de
-        publicaciones se suman en el próximo sprint.
-      </p>
-    </div>
+<!-- Barra de orden -->
+<div class="toolbar">
+  <h2>Publicaciones</h2>
+  <div class="orden">
+    <button class="orden-btn" [class.activo]="orden() === 'fecha'" (click)="cambiarOrden('fecha')">Más recientes</button>
+    <button class="orden-btn" [class.activo]="orden() === 'meGusta'" (click)="cambiarOrden('meGusta')">Más gustadas</button>
   </div>
-</section>
+</div>
+
+<!-- Listado -->
+@if (cargando()) {
+  <div class="estado"><span class="spinner spinner-osc"></span> Cargando...</div>
+} @else if (publicaciones().length === 0) {
+  <div class="card estado">Todavía no hay publicaciones. ¡Sé el primero en publicar!</div>
+} @else {
+  @for (pub of publicaciones(); track pub._id) {
+    <app-publicacion-card
+      [publicacion]="pub"
+      (meGusta)="alternarMeGusta(pub)"
+      (eliminar)="pedirEliminar(pub)"
+    />
+  }
+
+  <!-- Paginación -->
+  <div class="paginacion">
+    <button class="btn btn-secundario btn-sm" [disabled]="offset() === 0" (click)="paginaAnterior()">← Anterior</button>
+    <span class="pagina-info">Página {{ paginaActual() }} de {{ totalPaginas() }}</span>
+    <button class="btn btn-secundario btn-sm" [disabled]="paginaActual() >= totalPaginas()" (click)="paginaSiguiente()">Siguiente →</button>
+  </div>
+}

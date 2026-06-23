@@ -5,12 +5,20 @@
         @switch (n.tipo) {
           @case ('exito') { ✓ }
           @case ('error') { ✕ }
-          @default { i }
+          @default { @if (n.confirm) { ? } @else { i } }
         }
       </div>
       <h3>{{ n.titulo }}</h3>
       <p>{{ n.mensaje }}</p>
-      <button class="btn btn-primary btn-bloque" (click)="noti.cerrar()">Entendido</button>
+
+      @if (n.confirm) {
+        <div class="modal-botones">
+          <button class="btn btn-secundario" (click)="noti.cerrar()">Cancelar</button>
+          <button class="btn btn-primary" (click)="confirmar()">Confirmar</button>
+        </div>
+      } @else {
+        <button class="btn btn-primary btn-bloque" (click)="noti.cerrar()">Entendido</button>
+      }
     </div>
   </div>
 }
