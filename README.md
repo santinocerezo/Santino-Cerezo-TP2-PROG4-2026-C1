@@ -10,11 +10,11 @@ Aplicación de red social desarrollada en dos proyectos separados (frontend Angu
 
 | Proyecto | Tecnología | URL |
 |----------|-----------|-----|
-| Frontend | Angular (Render Static Site) | _completar con la URL de Render_ |
-| Backend  | NestJS (Render Web Service)  | _completar con la URL de Render_ |
+| Frontend | Angular (Render Static Site) | https://santino-cerezo-tp2-prog4-2026-c1-1.onrender.com |
+| Backend  | NestJS (Render Web Service)  | https://santino-cerezo-tp2-prog4-2026-c1.onrender.com |
 | Base de datos | MongoDB Atlas | (privada) |
 
-> Después de deployar, pegá las URLs reales acá y en `frontend/src/environments/environment.prod.ts`.
+> El frontend en producción ya apunta al backend mediante `frontend/src/environments/environment.prod.ts`.
 
 ## 🧰 Tecnologías
 
