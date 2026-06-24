@@ -1,0 +1,81 @@
+.pub {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-sm);
+  padding: 1.25rem 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.pub-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.pub-autor { display: flex; align-items: center; gap: 0.7rem; }
+
+.autor-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: #fff;
+  font-weight: 700;
+}
+.autor-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.autor-info { display: flex; flex-direction: column; line-height: 1.2; }
+.autor-nombre { font-weight: 700; font-size: 0.95rem; }
+.autor-usuario { color: var(--texto-suave); font-size: 0.82rem; }
+
+.pub-fecha { color: var(--texto-suave); font-size: 0.78rem; white-space: nowrap; }
+
+.pub-titulo { font-size: 1.15rem; margin: 0 0 0.35rem; }
+.pub-desc { margin: 0 0 0.75rem; color: #334155; white-space: pre-wrap; }
+
+.pub-img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 0.75rem;
+}
+
+.pub-acciones {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--borde);
+}
+
+.like-btn, .borrar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border: 1.5px solid var(--borde);
+  border-radius: 999px;
+  background: var(--blanco);
+  font-weight: 600;
+  font-size: 0.88rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.like-btn .corazon { color: #cbd5e1; transition: color 0.15s ease; }
+.like-btn:not(:disabled):hover { border-color: var(--acento); }
+.like-btn.activo { border-color: var(--acento); color: #be185d; background: #fce7f3; }
+.like-btn.activo .corazon { color: var(--acento); }
+.like-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.borrar-btn { margin-left: auto; color: var(--error); border-color: #fecaca; }
+.borrar-btn:hover { background: #fef2f2; }

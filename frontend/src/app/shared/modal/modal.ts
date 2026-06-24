@@ -9,4 +9,10 @@ import { NotificacionService } from '../../services/notificacion.service';
 })
 export class Modal {
   protected readonly noti = inject(NotificacionService);
+
+  // Ejecuta la acción confirmada y cierra el modal.
+  confirmar(): void {
+    this.noti.actual()?.onConfirm?.();
+    this.noti.cerrar();
+  }
 }

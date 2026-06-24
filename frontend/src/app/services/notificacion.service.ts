@@ -6,11 +6,14 @@ export interface Notificacion {
   tipo: TipoNotificacion;
   titulo: string;
   mensaje: string;
+  // Si es una confirmación, muestra botones Cancelar / Confirmar.
+  confirm?: boolean;
+  onConfirm?: () => void;
 }
 
 /**
  * Maneja el modal de notificaciones global.
- * Se usa en lugar de alert() (requisito de la consigna).
+ * Se usa en lugar de alert()/confirm() (requisito de la consigna).
  */
 @Injectable({ providedIn: 'root' })
 export class NotificacionService {
@@ -31,6 +34,11 @@ export class NotificacionService {
 
   info(mensaje: string, titulo = 'Información'): void {
     this.mostrar('info', titulo, mensaje);
+  }
+
+  /** Modal de confirmación con callback al aceptar. */
+  confirmar(mensaje: string, onConfirm: () => void, titulo = '¿Estás seguro?'): void {
+    this.actual.set({ tipo: 'info', titulo, mensaje, confirm: true, onConfirm });
   }
 
   /** Muestra el mensaje de error que devuelve el backend (string o array). */
