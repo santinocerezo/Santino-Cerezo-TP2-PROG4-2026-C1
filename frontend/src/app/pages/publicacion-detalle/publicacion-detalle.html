@@ -1,0 +1,120 @@
+<a routerLink="/publicaciones" class="volver">← Volver a publicaciones</a>
+
+@if (cargandoPub()) {
+  <div class="estado"><span class="spinner spinner-osc"></span> Cargando publicación...</div>
+} @else if (publicacion(); as pub) {
+  <!-- Publicación en grande -->
+  <article class="card detalle">
+    <header class="detalle-head">
+      <div class="detalle-autor">
+        <div class="autor-avatar">
+          @if (pub.autor?.fotoPerfil) {
+            <img [src]="pub.autor.fotoPerfil" [alt]="pub.autor.nombreUsuario" />
+          } @else {
+            <span>{{ inicial(pub.autor) }}</span>
+          }
+        </div>
+        <div class="autor-info">
+          <span class="autor-nombre">{{ pub.autor?.nombre }} {{ pub.autor?.apellido }}</span>
+          <span class="autor-usuario">&#64;{{ pub.autor?.nombreUsuario }}</span>
+        </div>
+      </div>
+      <span class="detalle-fecha">{{ pub.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+    </header>
+
+    <h1 class="detalle-titulo">{{ pub.titulo }}</h1>
+    <p class="detalle-desc">{{ pub.descripcion }}</p>
+
+    @if (pub.imagen) {
+      <img class="detalle-img" [src]="pub.imagen" [alt]="pub.titulo" />
+    }
+
+    <footer class="detalle-acciones">
+      <button class="like-btn" [class.activo]="yaDiMeGusta()" (click)="alternarMeGusta()">
+        <span class="corazon">♥</span> {{ pub.cantidadMeGusta }}
+      </button>
+      <span class="cant-comentarios">💬 {{ totalComentarios() }} comentarios</span>
+      @if (puedeEliminar()) {
+        <button class="borrar-btn" (click)="pedirEliminar()">🗑 Eliminar</button>
+      }
+    </footer>
+  </article>
+
+  <!-- Comentarios -->
+  <section class="card comentarios">
+    <h2>Comentarios</h2>
+
+    <!-- Nuevo comentario -->
+    <form [formGroup]="form" (ngSubmit)="comentar()" class="comentar-form">
+      <textarea
+        formControlName="mensaje"
+        placeholder="Escribí un comentario..."
+        [class.invalido]="esComentarioInvalido()"
+      ></textarea>
+      @if (esComentarioInvalido()) {
+        <span class="error-texto">El comentario no puede estar vacío (máx. 1000).</span>
+      }
+      <div class="comentar-botones">
+        <button type="submit" class="btn btn-primary btn-sm" [disabled]="enviando()">
+          @if (enviando()) { <span class="spinner"></span> Enviando... } @else { Comentar }
+        </button>
+      </div>
+    </form>
+
+    <!-- Listado de comentarios -->
+    @if (comentarios().length === 0 && !cargandoComentarios()) {
+      <p class="ayuda-texto sin-comentarios">Todavía no hay comentarios. ¡Sé el primero!</p>
+    } @else {
+      <ul class="lista-comentarios">
+        @for (c of comentarios(); track c._id) {
+          <li class="comentario">
+            <div class="comentario-avatar">
+              @if (c.autor?.fotoPerfil) {
+                <img [src]="c.autor.fotoPerfil" [alt]="c.autor.nombreUsuario" />
+              } @else {
+                <span>{{ inicial(c.autor) }}</span>
+              }
+            </div>
+            <div class="comentario-cuerpo">
+              <div class="comentario-cabecera">
+                <span class="comentario-autor">{{ c.autor?.nombre }} {{ c.autor?.apellido }}</span>
+                <span class="comentario-fecha">
+                  {{ c.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+                  @if (c.modificado) { <span class="editado">· editado</span> }
+                </span>
+              </div>
+
+              @if (editandoId() === c._id) {
+                <!-- Modo edición -->
+                <textarea
+                  class="editar-area"
+                  [value]="textoEdicion()"
+                  (input)="textoEdicion.set($any($event.target).value)"
+                ></textarea>
+                <div class="comentario-editar-botones">
+                  <button class="btn btn-secundario btn-sm" (click)="cancelarEdicion()">Cancelar</button>
+                  <button class="btn btn-primary btn-sm" (click)="guardarEdicion(c)">Guardar</button>
+                </div>
+              } @else {
+                <p class="comentario-mensaje">{{ c.mensaje }}</p>
+                @if (puedeEditar(c)) {
+                  <button class="editar-link" (click)="empezarEdicion(c)">Editar</button>
+                }
+              }
+            </div>
+          </li>
+        }
+      </ul>
+
+      @if (hayMas()) {
+        <div class="cargar-mas">
+          <button class="btn btn-secundario btn-sm" [disabled]="cargandoComentarios()" (click)="cargarComentarios()">
+            @if (cargandoComentarios()) { <span class="spinner spinner-osc"></span> Cargando... } @else { Cargar más comentarios }
+          </button>
+        </div>
+      }
+    }
+  </section>
+} @else {
+  <div class="card estado">No se encontró la publicación.</div>
+}

@@ -16,7 +16,9 @@
     <span class="pub-fecha">{{ publicacion.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
   </header>
 
-  <h3 class="pub-titulo">{{ publicacion.titulo }}</h3>
+  <a class="pub-titulo-link" [routerLink]="['/publicaciones', publicacion._id]">
+    <h3 class="pub-titulo">{{ publicacion.titulo }}</h3>
+  </a>
   <p class="pub-desc">{{ publicacion.descripcion }}</p>
 
   @if (publicacion.imagen) {
@@ -33,6 +35,8 @@
     >
       <span class="corazon">♥</span> {{ publicacion.cantidadMeGusta }}
     </button>
+
+    <a class="comentar-link" [routerLink]="['/publicaciones', publicacion._id]">💬 Ver / comentar</a>
 
     @if (puedeEliminar()) {
       <button class="borrar-btn" (click)="eliminar.emit()">🗑 Eliminar</button>

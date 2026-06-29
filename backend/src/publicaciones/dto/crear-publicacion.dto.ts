@@ -1,4 +1,4 @@
-import { IsMongoId, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class CrearPublicacionDto {
   @IsString()
@@ -11,7 +11,5 @@ export class CrearPublicacionDto {
   @MaxLength(2000, { message: 'La descripción es demasiado larga' })
   descripcion: string;
 
-  // Id del usuario autor. Hasta el Sprint 3 (JWT) se envía desde el frontend.
-  @IsMongoId({ message: 'El autor no es válido' })
-  autor: string;
+  // El autor ya NO se envía desde el frontend: se toma del token JWT (Sprint 3).
 }

@@ -1,17 +1,18 @@
 <header class="navbar">
   <div class="navbar-inner">
-    <a routerLink="/" class="marca">
+    <a routerLink="/publicaciones" class="marca">
       <img class="marca-logo-img" src="favicon.svg" alt="Logo Red Social" />
       <span class="marca-texto">Red Social</span>
     </a>
 
     <nav class="links">
-      <a routerLink="/" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">Publicaciones</a>
+      <a routerLink="/publicaciones" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">Publicaciones</a>
       <a routerLink="/mi-perfil" routerLinkActive="activo">Mi perfil</a>
     </nav>
 
     <div class="acciones">
       @if (auth.estaLogueado()) {
+        <span class="sesion-contador" title="Tiempo restante de tu sesión">⏱ {{ sesion.restanteTexto() }}</span>
         <a routerLink="/mi-perfil" class="usuario-chip" title="Ver mi perfil">
           @if (auth.usuario()?.fotoPerfil) {
             <img [src]="auth.usuario()!.fotoPerfil" [alt]="auth.usuario()?.nombreUsuario" />

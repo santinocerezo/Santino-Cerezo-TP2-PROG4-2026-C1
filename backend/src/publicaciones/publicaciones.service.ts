@@ -29,8 +29,12 @@ export class PublicacionesService {
     private readonly cloudinary: CloudinaryService,
   ) {}
 
-  // Alta de publicación. Si trae imagen, la sube a Cloudinary.
-  async crear(dto: CrearPublicacionDto, imagen?: Express.Multer.File) {
+  // Alta de publicación. El autor viene del token. Si trae imagen, la sube a Cloudinary.
+  async crear(
+    dto: CrearPublicacionDto,
+    autorId: string,
+    imagen?: Express.Multer.File,
+  ) {
     let url = '';
     if (imagen) {
       if (!imagen.mimetype?.startsWith('image/')) {
@@ -42,11 +46,23 @@ export class PublicacionesService {
       titulo: dto.titulo,
       descripcion: dto.descripcion,
       imagen: url,
-      autor: new Types.ObjectId(dto.autor),
+      autor: new Types.ObjectId(autorId),
       meGusta: [],
       cantidadMeGusta: 0,
     });
     return pub.populate('autor', this.AUTOR);
+  }
+
+  // Trae una publicación por id (para la pantalla de detalle).
+  async obtener(id: string) {
+    const pub = await this.model
+      .findById(id)
+      .populate('autor', this.AUTOR)
+      .exec();
+    if (!pub || pub.eliminado) {
+      throw new NotFoundException('Publicación no encontrada');
+    }
+    return pub;
   }
 
   // Listado: solo no eliminadas, con orden, filtro por autor y paginación.

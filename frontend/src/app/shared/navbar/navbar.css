@@ -59,6 +59,20 @@
 
 .btn-sm { padding: 0.5rem 0.9rem; font-size: 0.85rem; }
 
+.sesion-contador {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  color: var(--texto-suave);
+  font-weight: 700;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
 .usuario-chip {
   display: flex;
   align-items: center;

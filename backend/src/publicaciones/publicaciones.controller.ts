@@ -9,28 +9,33 @@ import {
   Post,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PublicacionesService } from './publicaciones.service';
 import { CrearPublicacionDto } from './dto/crear-publicacion.dto';
 import { ListarPublicacionesDto } from './dto/listar-publicaciones.dto';
-import { AccionUsuarioDto } from './dto/accion-usuario.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UsuarioToken } from '../auth/usuario-token.decorator';
 
+// Todas las rutas requieren un token JWT válido (Sprint 3).
 @Controller('publicaciones')
+@UseGuards(JwtAuthGuard)
 export class PublicacionesController {
   constructor(private readonly service: PublicacionesService) {}
 
-  // POST /publicaciones -> 201 (alta de publicación, con imagen opcional)
+  // POST /publicaciones -> 201 (el autor se toma del token)
   @Post()
   @UseInterceptors(
     FileInterceptor('imagen', { limits: { fileSize: 5 * 1024 * 1024 } }),
   )
   crear(
     @Body() dto: CrearPublicacionDto,
+    @UsuarioToken('sub') usuarioId: string,
     @UploadedFile() imagen?: Express.Multer.File,
   ) {
-    return this.service.crear(dto, imagen);
+    return this.service.crear(dto, usuarioId, imagen);
   }
 
   // GET /publicaciones?orden=fecha|meGusta&usuario=<id>&offset=0&limit=10
@@ -39,24 +44,33 @@ export class PublicacionesController {
     return this.service.listar(query);
   }
 
-  // DELETE /publicaciones/:id -> baja lógica (autor o admin)
+  // GET /publicaciones/:id -> detalle de una publicación
+  @Get(':id')
+  obtener(@Param('id') id: string) {
+    return this.service.obtener(id);
+  }
+
+  // DELETE /publicaciones/:id -> baja lógica (autor o admin, según el token)
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  eliminar(@Param('id') id: string, @Body() dto: AccionUsuarioDto) {
-    return this.service.eliminar(id, dto.usuarioId);
+  eliminar(@Param('id') id: string, @UsuarioToken('sub') usuarioId: string) {
+    return this.service.eliminar(id, usuarioId);
   }
 
-  // POST /publicaciones/:id/me-gusta -> dar me gusta
+  // POST /publicaciones/:id/me-gusta -> dar me gusta (usuario del token)
   @Post(':id/me-gusta')
   @HttpCode(HttpStatus.OK)
-  darMeGusta(@Param('id') id: string, @Body() dto: AccionUsuarioDto) {
-    return this.service.darMeGusta(id, dto.usuarioId);
+  darMeGusta(@Param('id') id: string, @UsuarioToken('sub') usuarioId: string) {
+    return this.service.darMeGusta(id, usuarioId);
   }
 
-  // DELETE /publicaciones/:id/me-gusta -> quitar me gusta
+  // DELETE /publicaciones/:id/me-gusta -> quitar me gusta (usuario del token)
   @Delete(':id/me-gusta')
   @HttpCode(HttpStatus.OK)
-  quitarMeGusta(@Param('id') id: string, @Body() dto: AccionUsuarioDto) {
-    return this.service.quitarMeGusta(id, dto.usuarioId);
+  quitarMeGusta(
+    @Param('id') id: string,
+    @UsuarioToken('sub') usuarioId: string,
+  ) {
+    return this.service.quitarMeGusta(id, usuarioId);
   }
 }

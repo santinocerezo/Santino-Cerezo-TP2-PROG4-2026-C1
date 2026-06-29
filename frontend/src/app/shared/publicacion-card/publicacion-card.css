@@ -37,7 +37,9 @@
 
 .pub-fecha { color: var(--texto-suave); font-size: 0.78rem; white-space: nowrap; }
 
-.pub-titulo { font-size: 1.15rem; margin: 0 0 0.35rem; }
+.pub-titulo-link { text-decoration: none; color: inherit; }
+.pub-titulo-link:hover .pub-titulo { color: var(--primario); }
+.pub-titulo { font-size: 1.15rem; margin: 0 0 0.35rem; transition: color 0.15s ease; }
 .pub-desc { margin: 0 0 0.75rem; color: #334155; white-space: pre-wrap; }
 
 .pub-img {
@@ -76,6 +78,21 @@
 .like-btn.activo { border-color: var(--acento); color: #be185d; background: #fce7f3; }
 .like-btn.activo .corazon { color: var(--acento); }
 .like-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.comentar-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.9rem;
+  border: 1.5px solid var(--borde);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+.comentar-link:hover { border-color: var(--primario); color: var(--primario); text-decoration: none; }
 
 .borrar-btn { margin-left: auto; color: var(--error); border-color: #fecaca; }
 .borrar-btn:hover { background: #fef2f2; }

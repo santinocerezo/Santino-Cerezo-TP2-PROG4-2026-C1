@@ -4,17 +4,21 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { UserDocument } from '../users/schemas/user.schema';
 import { RegistroDto } from './dto/registro.dto';
 import { LoginDto } from './dto/login.dto';
+import { JwtPayload } from './jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly cloudinary: CloudinaryService,
+    private readonly jwt: JwtService,
   ) {}
 
   async registro(dto: RegistroDto, foto?: Express.Multer.File) {
@@ -57,7 +61,12 @@ export class AuthService {
     });
 
     // El toJSON del schema quita la contraseña automáticamente.
-    return { mensaje: 'Usuario registrado correctamente', usuario };
+    // Devolvemos también el token JWT (Sprint 3).
+    return {
+      mensaje: 'Usuario registrado correctamente',
+      usuario,
+      token: this.firmarToken(usuario),
+    };
   }
 
   async login(dto: LoginDto) {
@@ -79,6 +88,43 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    return { mensaje: 'Login correcto', usuario };
+    return {
+      mensaje: 'Login correcto',
+      usuario,
+      token: this.firmarToken(usuario),
+    };
+  }
+
+  // POST /auth/autorizar: el guard ya validó el token. Devolvemos los
+  // datos actualizados del usuario (o 401 si dejó de existir / fue deshabilitado).
+  async autorizar(usuarioId: string) {
+    const usuario = await this.usersService.buscarPorId(usuarioId);
+    if (!usuario || usuario.eliminado) {
+      throw new UnauthorizedException('La sesión ya no es válida');
+    }
+    return { usuario };
+  }
+
+  // POST /auth/refrescar: el guard ya validó el token. Emitimos uno nuevo
+  // con la misma información y otros 15 minutos de vigencia.
+  refrescar(payload: JwtPayload) {
+    const nuevo = this.jwt.sign({
+      sub: payload.sub,
+      correo: payload.correo,
+      nombreUsuario: payload.nombreUsuario,
+      perfil: payload.perfil,
+    } satisfies JwtPayload);
+    return { token: nuevo };
+  }
+
+  // Firma un token con la identidad y el rol del usuario.
+  private firmarToken(usuario: UserDocument): string {
+    const payload: JwtPayload = {
+      sub: usuario.id as string,
+      correo: usuario.correo,
+      nombreUsuario: usuario.nombreUsuario,
+      perfil: usuario.perfil,
+    };
+    return this.jwt.sign(payload);
   }
 }

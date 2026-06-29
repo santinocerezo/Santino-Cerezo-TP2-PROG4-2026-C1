@@ -25,24 +25,26 @@ export class PublicacionesService {
     return this.http.get<RespuestaListado>(this.url, { params });
   }
 
+  /** Trae una publicación por id (pantalla de detalle). */
+  obtener(id: string): Observable<Publicacion> {
+    return this.http.get<Publicacion>(`${this.url}/${id}`);
+  }
+
+  // En el Sprint 3 el usuario se identifica con el token (JWT), así que las
+  // peticiones ya no envían el id del usuario: lo agrega el backend.
   crear(datos: FormData): Observable<Publicacion> {
     return this.http.post<Publicacion>(this.url, datos);
   }
 
-  eliminar(id: string, usuarioId: string): Observable<{ mensaje: string }> {
-    // El id del usuario va en el body (hasta el Sprint 3 que usa JWT).
-    return this.http.delete<{ mensaje: string }>(`${this.url}/${id}`, {
-      body: { usuarioId },
-    });
+  eliminar(id: string): Observable<{ mensaje: string }> {
+    return this.http.delete<{ mensaje: string }>(`${this.url}/${id}`);
   }
 
-  darMeGusta(id: string, usuarioId: string): Observable<Publicacion> {
-    return this.http.post<Publicacion>(`${this.url}/${id}/me-gusta`, { usuarioId });
+  darMeGusta(id: string): Observable<Publicacion> {
+    return this.http.post<Publicacion>(`${this.url}/${id}/me-gusta`, {});
   }
 
-  quitarMeGusta(id: string, usuarioId: string): Observable<Publicacion> {
-    return this.http.delete<Publicacion>(`${this.url}/${id}/me-gusta`, {
-      body: { usuarioId },
-    });
+  quitarMeGusta(id: string): Observable<Publicacion> {
+    return this.http.delete<Publicacion>(`${this.url}/${id}/me-gusta`);
   }
 }

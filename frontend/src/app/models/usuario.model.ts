@@ -21,4 +21,5 @@ export interface Usuario {
 export interface RespuestaAuth {
   mensaje: string;
   usuario: Usuario;
+  token: string; // JWT (Sprint 3)
 }

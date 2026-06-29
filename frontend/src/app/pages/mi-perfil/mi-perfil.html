@@ -44,16 +44,16 @@
       <p class="ayuda-texto">Todavía no publicaste nada.</p>
     } @else {
       @for (pub of misPublicaciones(); track pub._id) {
-        <div class="mini-pub">
+        <a class="mini-pub" [routerLink]="['/publicaciones', pub._id]">
           <div class="mini-pub-cabecera">
             <span class="mini-pub-titulo">{{ pub.titulo }}</span>
             <span class="mini-pub-fecha">{{ pub.createdAt | date: 'dd/MM/yyyy' }}</span>
           </div>
           <p class="mini-pub-desc">{{ pub.descripcion }}</p>
-          <span class="mini-pub-likes">♥ {{ pub.cantidadMeGusta }} me gusta</span>
-        </div>
+          <span class="mini-pub-likes">♥ {{ pub.cantidadMeGusta }} me gusta · 💬 ver comentarios</span>
+        </a>
       }
-      <a routerLink="/" class="ayuda-texto ver-todas">Ver todas las publicaciones →</a>
+      <a routerLink="/publicaciones" class="ayuda-texto ver-todas">Ver todas las publicaciones →</a>
     }
   </div>
 } @else {

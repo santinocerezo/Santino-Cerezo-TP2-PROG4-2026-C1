@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { SesionService } from '../../services/sesion.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,6 +11,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class Navbar {
   protected readonly auth = inject(AuthService);
+  protected readonly sesion = inject(SesionService);
   private readonly router = inject(Router);
 
   /** Inicial del usuario para el avatar cuando no tiene foto. */

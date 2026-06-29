@@ -110,7 +110,7 @@ export class Registro {
       next: () => {
         this.cargando.set(false);
         this.noti.exito('Tu cuenta fue creada correctamente. ¡Bienvenido/a!');
-        this.router.navigate(['/']);
+        this.router.navigate(['/publicaciones']);
       },
       error: (err) => {
         this.cargando.set(false);
