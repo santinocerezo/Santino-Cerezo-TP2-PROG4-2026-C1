@@ -16,6 +16,8 @@ services:
       # Estas variables se cargan en el dashboard (son secretas).
       - key: FRONTEND_URL
         sync: false
+      - key: JWT_SECRET
+        sync: false
       - key: MONGODB_URI
         sync: false
       - key: CLOUDINARY_CLOUD_NAME
