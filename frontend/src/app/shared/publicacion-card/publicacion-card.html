@@ -13,13 +13,15 @@
         <span class="autor-usuario">&#64;{{ publicacion.autor?.nombreUsuario }}</span>
       </div>
     </div>
-    <span class="pub-fecha">{{ publicacion.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+    <span class="pub-fecha" [title]="publicacion.createdAt | date: 'dd/MM/yyyy HH:mm'">
+      {{ publicacion.createdAt | tiempoRelativo }}
+    </span>
   </header>
 
   <a class="pub-titulo-link" [routerLink]="['/publicaciones', publicacion._id]">
     <h3 class="pub-titulo">{{ publicacion.titulo }}</h3>
   </a>
-  <p class="pub-desc">{{ publicacion.descripcion }}</p>
+  <p class="pub-desc">{{ publicacion.descripcion | truncar: 240 }}</p>
 
   @if (publicacion.imagen) {
     <img class="pub-img" [src]="publicacion.imagen" [alt]="publicacion.titulo" />

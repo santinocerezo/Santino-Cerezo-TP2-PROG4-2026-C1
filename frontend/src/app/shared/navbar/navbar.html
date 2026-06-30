@@ -8,6 +8,8 @@
     <nav class="links">
       <a routerLink="/publicaciones" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">Publicaciones</a>
       <a routerLink="/mi-perfil" routerLinkActive="activo">Mi perfil</a>
+      <!-- Solo visible para administradores (directiva propia *appSoloAdmin). -->
+      <a *appSoloAdmin routerLink="/dashboard" routerLinkActive="activo" class="link-admin">Panel</a>
     </nav>
 
     <div class="acciones">
@@ -17,7 +19,7 @@
           @if (auth.usuario()?.fotoPerfil) {
             <img [src]="auth.usuario()!.fotoPerfil" [alt]="auth.usuario()?.nombreUsuario" />
           } @else {
-            <span class="avatar-iniciales">{{ inicial() }}</span>
+            <span class="avatar-iniciales">{{ auth.usuario()?.nombre || auth.usuario()?.nombreUsuario | iniciales }}</span>
           }
           <span class="usuario-nombre">{{ auth.usuario()?.nombreUsuario }}</span>
         </a>

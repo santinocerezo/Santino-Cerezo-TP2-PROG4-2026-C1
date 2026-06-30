@@ -1,0 +1,75 @@
+.filtros { margin-bottom: 1.5rem; padding: 1.25rem 1.5rem; }
+
+.filtros-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filtros-form .form-grupo { margin-bottom: 0; min-width: 150px; }
+
+/* ---------- Rango rápido (desplegable) ---------- */
+.rango-rapido { position: relative; }
+
+.menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  min-width: 200px;
+  background: var(--superficie-2);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  box-shadow: var(--sombra);
+}
+
+.menu li { display: block; }
+
+.menu button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--texto);
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.menu button:hover { background: var(--primario-claro); color: var(--primario); }
+
+/* ---------- Grilla de gráficos ---------- */
+.grilla-graficos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.grafico h3 { font-size: 1.1rem; }
+.grafico-ancho { grid-column: 1 / -1; }
+
+.lienzo {
+  position: relative;
+  height: 320px;
+  margin-top: 0.75rem;
+}
+
+.sin-datos {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 760px) {
+  .grilla-graficos { grid-template-columns: 1fr; }
+  .grafico-ancho { grid-column: auto; }
+}

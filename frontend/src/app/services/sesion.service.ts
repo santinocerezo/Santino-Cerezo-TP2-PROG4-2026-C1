@@ -17,7 +17,8 @@ export class SesionService {
   private readonly noti = inject(NotificacionService);
   private readonly router = inject(Router);
 
-  private readonly DURACION_MS = 15 * 60 * 1000; // el token vive 15 minutos
+  // El token del backend vence a los 15 minutos (Sprint 3).
+  private readonly DURACION_MS = 15 * 60 * 1000; // la sesión dura 15 minutos
   private readonly AVISO_RESTANTE_S = 5 * 60; // avisar cuando queden 5 minutos
 
   private intervalo: ReturnType<typeof setInterval> | null = null;

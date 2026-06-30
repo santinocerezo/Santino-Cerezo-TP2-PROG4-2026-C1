@@ -1,0 +1,169 @@
+<section class="card">
+  <div class="flex-between usuarios-top">
+    <div>
+      <h2 class="card-titulo">Usuarios</h2>
+      <p class="subtitulo">{{ usuarios().length }} usuario(s) registrados.</p>
+    </div>
+    <button class="btn btn-primary btn-sm" (click)="alternarFormulario()">
+      {{ mostrarFormulario() ? 'Cerrar' : '+ Nuevo usuario' }}
+    </button>
+  </div>
+
+  <!-- Formulario de alta de usuario -->
+  @if (mostrarFormulario()) {
+    <form [formGroup]="form" (ngSubmit)="crear()" class="form-alta">
+      <div class="form-fila">
+        <div class="form-grupo">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" appAutoFocus formControlName="nombre" [class.invalido]="esInvalido('nombre')" />
+          @if (esInvalido('nombre')) { <span class="error-texto">El nombre es obligatorio.</span> }
+        </div>
+        <div class="form-grupo">
+          <label for="apellido">Apellido</label>
+          <input id="apellido" formControlName="apellido" [class.invalido]="esInvalido('apellido')" />
+          @if (esInvalido('apellido')) { <span class="error-texto">El apellido es obligatorio.</span> }
+        </div>
+      </div>
+
+      <div class="form-fila">
+        <div class="form-grupo">
+          <label for="correo">Correo</label>
+          <input id="correo" type="email" formControlName="correo" [class.invalido]="esInvalido('correo')" />
+          @if (esInvalido('correo')) { <span class="error-texto">Ingresá un correo válido.</span> }
+        </div>
+        <div class="form-grupo">
+          <label for="nombreUsuario">Nombre de usuario</label>
+          <input id="nombreUsuario" formControlName="nombreUsuario" [class.invalido]="esInvalido('nombreUsuario')" />
+          @if (esInvalido('nombreUsuario')) { <span class="error-texto">Mínimo 3 caracteres.</span> }
+        </div>
+      </div>
+
+      <div class="form-fila">
+        <div class="form-grupo">
+          <label for="password">Contraseña</label>
+          <input id="password" type="password" formControlName="password" [class.invalido]="esInvalido('password')" />
+          @if (esInvalido('password')) {
+            <span class="error-texto">Mínimo 8 caracteres, una mayúscula y un número.</span>
+          }
+        </div>
+        <div class="form-grupo">
+          <label for="repetirPassword">Repetir contraseña</label>
+          <input id="repetirPassword" type="password" formControlName="repetirPassword" [class.invalido]="noCoinciden" />
+          @if (noCoinciden) { <span class="error-texto">Las contraseñas no coinciden.</span> }
+        </div>
+      </div>
+
+      <div class="form-fila">
+        <div class="form-grupo">
+          <label for="fechaNacimiento">Fecha de nacimiento</label>
+          <input
+            id="fechaNacimiento"
+            type="date"
+            formControlName="fechaNacimiento"
+            [min]="minFechaNac"
+            [max]="maxFechaNac"
+            [class.invalido]="esInvalido('fechaNacimiento')"
+          />
+          @if (esInvalido('fechaNacimiento')) {
+            <span class="error-texto">Tenés que tener entre 13 y 120 años.</span>
+          }
+        </div>
+        <div class="form-grupo">
+          <label>Perfil</label>
+          <div class="radios">
+            <label class="radio">
+              <input type="radio" formControlName="perfil" value="usuario" />
+              <span>Usuario</span>
+            </label>
+            <label class="radio">
+              <input type="radio" formControlName="perfil" value="administrador" />
+              <span>Administrador</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-grupo">
+        <label for="descripcion">Descripción (opcional)</label>
+        <textarea id="descripcion" formControlName="descripcion" maxlength="300"></textarea>
+      </div>
+
+      <div class="form-grupo">
+        <label for="fotoPerfil" class="btn btn-secundario btn-sm">📷 Elegir foto de perfil</label>
+        <input id="fotoPerfil" type="file" accept="image/*" hidden (change)="alSeleccionarArchivo($event)" />
+        @if (preview()) {
+          <img class="preview-foto" [src]="preview()" alt="Vista previa" />
+        }
+      </div>
+
+      <div class="flex mt-1">
+        <button type="submit" class="btn btn-primary" [disabled]="creando()">
+          @if (creando()) { <span class="spinner"></span> Creando... } @else { Crear usuario }
+        </button>
+        <button type="button" class="btn btn-secundario" (click)="alternarFormulario()">Cancelar</button>
+      </div>
+    </form>
+  }
+
+  <!-- Listado de usuarios -->
+  @if (cargando()) {
+    <div class="estado"><span class="spinner spinner-osc"></span> Cargando usuarios...</div>
+  } @else if (usuarios().length === 0) {
+    <p class="ayuda-texto">No hay usuarios para mostrar.</p>
+  } @else {
+    <div class="tabla-scroll">
+      <table class="tabla-usuarios">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Correo</th>
+            <th>Perfil</th>
+            <th>Estado</th>
+            <th>Registrado</th>
+            <th class="col-acciones">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (u of usuarios(); track u._id) {
+            <tr [class.fila-baja]="u.eliminado">
+              <td>
+                <div class="celda-usuario">
+                  <div class="avatar-mini">
+                    @if (u.fotoPerfil) {
+                      <img [src]="u.fotoPerfil" [alt]="u.nombreUsuario" />
+                    } @else {
+                      <span>{{ u.nombre + ' ' + u.apellido | iniciales }}</span>
+                    }
+                  </div>
+                  <div class="celda-usuario-texto">
+                    <span class="nombre-completo">{{ u.nombre }} {{ u.apellido }}</span>
+                    <span class="arroba">&#64;{{ u.nombreUsuario }}</span>
+                  </div>
+                </div>
+              </td>
+              <td class="correo">{{ u.correo }}</td>
+              <td>
+                <span class="badge" [class.admin]="u.perfil === 'administrador'">{{ u.perfil }}</span>
+              </td>
+              <td>
+                @if (u.eliminado) {
+                  <span class="estado-pill baja">Deshabilitado</span>
+                } @else {
+                  <span class="estado-pill alta">Activo</span>
+                }
+              </td>
+              <td class="registrado">{{ u.createdAt | tiempoRelativo }}</td>
+              <td class="col-acciones">
+                @if (u.eliminado) {
+                  <button class="btn btn-secundario btn-sm" (click)="pedirHabilitar(u)">Habilitar</button>
+                } @else {
+                  <button class="btn btn-peligro btn-sm" (click)="pedirDeshabilitar(u)">Deshabilitar</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
