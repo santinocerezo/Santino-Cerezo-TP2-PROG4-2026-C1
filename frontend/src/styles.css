@@ -5,25 +5,32 @@
    ============================================================ */
 
 :root {
-  /* Colores */
-  --primario: #4f46e5;
-  --primario-osc: #4338ca;
-  --primario-claro: #eef2ff;
+  /* Colores (tema oscuro / dark mode) */
+  --primario: #8b5cf6;
+  --primario-osc: #7c3aed;
+  --primario-claro: #1d1830;   /* tinte violeta oscuro para chips/hover */
   --acento: #ec4899;
-  --exito: #16a34a;
-  --error: #dc2626;
-  --info: #2563eb;
+  --exito: #22c55e;
+  --error: #f87171;
+  --info: #60a5fa;
 
-  --texto: #1e293b;
-  --texto-suave: #64748b;
-  --borde: #e2e8f0;
-  --fondo: #f1f5f9;
-  --blanco: #ffffff;
+  --texto: #e8e8f0;            /* texto principal (claro) */
+  --texto-suave: #9aa0b4;      /* texto secundario */
+  --borde: #272733;            /* bordes sutiles */
+  --fondo: #0b0b12;            /* fondo de la app */
+  --superficie: #16161f;       /* cards, inputs, botones secundarios */
+  --superficie-2: #1e1e2b;     /* fondos internos / hover */
+  --blanco: #ffffff;           /* texto sobre el botón primario */
+
+  /* Avatares: fondo oscuro para que una foto transparente se vea sobre negro
+     y la inicial quede legible (en lugar del violeta anterior). */
+  --avatar-bg: linear-gradient(135deg, #2a2342, #161620);
+  --avatar-ini: #c4b5fd;
 
   /* Otros */
   --radio: 14px;
-  --sombra: 0 10px 30px rgba(2, 6, 23, 0.08);
-  --sombra-sm: 0 2px 8px rgba(2, 6, 23, 0.06);
+  --sombra: 0 16px 40px rgba(0, 0, 0, 0.45);
+  --sombra-sm: 0 2px 10px rgba(0, 0, 0, 0.35);
   --trans: 0.2s ease;
 }
 
@@ -39,8 +46,8 @@ body {
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   color: var(--texto);
   background:
-    radial-gradient(1200px 600px at 100% -10%, #ede9fe 0%, transparent 55%),
-    radial-gradient(1000px 500px at -10% 0%, #fce7f3 0%, transparent 45%),
+    radial-gradient(1200px 600px at 100% -10%, rgba(124, 58, 237, 0.18) 0%, transparent 55%),
+    radial-gradient(1000px 500px at -10% 0%, rgba(236, 72, 153, 0.12) 0%, transparent 45%),
     var(--fondo);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
@@ -67,7 +74,7 @@ a:hover { text-decoration: underline; }
 
 /* ---------- Cards ---------- */
 .card {
-  background: var(--blanco);
+  background: var(--superficie);
   border: 1px solid var(--borde);
   border-radius: var(--radio);
   box-shadow: var(--sombra);
@@ -111,14 +118,19 @@ input, select, textarea {
   font-size: 0.95rem;
   font-family: inherit;
   color: var(--texto);
-  background: var(--blanco);
+  background: var(--superficie);
   transition: border-color var(--trans), box-shadow var(--trans);
 }
+
+input::placeholder, textarea::placeholder { color: var(--texto-suave); }
+
+/* Mejora el calendario/íconos nativos de los inputs en tema oscuro */
+input[type="date"] { color-scheme: dark; }
 
 input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: var(--primario);
-  box-shadow: 0 0 0 4px var(--primario-claro);
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.25);
 }
 
 input.invalido, select.invalido, textarea.invalido {
@@ -165,12 +177,15 @@ textarea { resize: vertical; min-height: 80px; }
 .btn-primary:not(:disabled):hover { background: var(--primario-osc); }
 
 .btn-secundario {
-  background: var(--blanco);
-  color: var(--primario);
+  background: var(--superficie);
+  color: var(--texto);
   border: 1.5px solid var(--borde);
 }
+.btn-secundario:not(:disabled):hover { border-color: var(--primario); color: var(--primario); }
 
 .btn-bloque { width: 100%; }
+.btn-sm { padding: 0.5rem 0.9rem; font-size: 0.85rem; }
+label.btn { cursor: pointer; }
 
 /* ---------- Badges ---------- */
 .badge {
@@ -179,11 +194,11 @@ textarea { resize: vertical; min-height: 80px; }
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 700;
-  background: var(--primario-claro);
-  color: var(--primario-osc);
+  background: rgba(139, 92, 246, 0.16);
+  color: var(--avatar-ini);
   text-transform: capitalize;
 }
-.badge.admin { background: #fce7f3; color: #be185d; }
+.badge.admin { background: rgba(236, 72, 153, 0.16); color: #f9a8d4; }
 
 /* ---------- Utilidades ---------- */
 .texto-centro { text-align: center; }

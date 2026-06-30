@@ -1,39 +1,126 @@
 @if (auth.usuario(); as u) {
-  <div class="perfil-card card">
-    <div class="perfil-cabecera">
-      <div class="perfil-avatar">
-        @if (u.fotoPerfil) {
-          <img [src]="u.fotoPerfil" [alt]="u.nombreUsuario" />
+  @if (!editando()) {
+    <!-- ===================== Vista del perfil ===================== -->
+    <div class="perfil-card card">
+      <div class="perfil-cabecera">
+        <div class="perfil-avatar">
+          @if (u.fotoPerfil) {
+            <img [src]="u.fotoPerfil" [alt]="u.nombreUsuario" />
+          } @else {
+            <span>{{ inicial() }}</span>
+          }
+        </div>
+        <div class="perfil-titulo">
+          <h1>{{ u.nombre }} {{ u.apellido }}</h1>
+          <p class="usuario">&#64;{{ u.nombreUsuario }}</p>
+          <span class="badge" [class.admin]="u.perfil === 'administrador'">{{ u.perfil }}</span>
+        </div>
+        <button class="btn btn-secundario btn-sm editar-btn" (click)="abrirEdicion()">
+          ✎ Editar perfil
+        </button>
+      </div>
+
+      @if (u.descripcion) {
+        <p class="perfil-descripcion">{{ u.descripcion }}</p>
+      }
+
+      <div class="perfil-datos">
+        <div class="dato">
+          <span class="dato-label">Correo</span>
+          <span class="dato-valor">{{ u.correo }}</span>
+        </div>
+        <div class="dato">
+          <span class="dato-label">Fecha de nacimiento</span>
+          <span class="dato-valor">{{ u.fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="dato">
+          <span class="dato-label">Miembro desde</span>
+          <span class="dato-valor">{{ u.createdAt | date: 'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- ===================== Edición del perfil ===================== -->
+    <form class="card perfil-editar" [formGroup]="form" (ngSubmit)="guardar()">
+      <h1 class="card-titulo">Editar perfil</h1>
+      <p class="subtitulo">Actualizá tus datos. El correo y el nombre de usuario no pueden repetirse.</p>
+
+      <!-- Foto -->
+      <div class="editar-foto">
+        <div class="perfil-avatar grande">
+          @if (preview()) {
+            <img [src]="preview()" alt="Vista previa" />
+          } @else if (u.fotoPerfil) {
+            <img [src]="u.fotoPerfil" [alt]="u.nombreUsuario" />
+          } @else {
+            <span>{{ inicial() }}</span>
+          }
+        </div>
+        <label class="btn btn-secundario btn-sm">
+          📷 Cambiar foto
+          <input type="file" accept="image/*" hidden (change)="alSeleccionarArchivo($event)" />
+        </label>
+      </div>
+
+      <div class="form-fila">
+        <div class="form-grupo">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" type="text" formControlName="nombre" [class.invalido]="esInvalido('nombre')" />
+          @if (esInvalido('nombre')) { <span class="error-texto">El nombre es obligatorio.</span> }
+        </div>
+        <div class="form-grupo">
+          <label for="apellido">Apellido</label>
+          <input id="apellido" type="text" formControlName="apellido" [class.invalido]="esInvalido('apellido')" />
+          @if (esInvalido('apellido')) { <span class="error-texto">El apellido es obligatorio.</span> }
+        </div>
+      </div>
+
+      <div class="form-grupo">
+        <label for="correo">Correo</label>
+        <input id="correo" type="email" formControlName="correo" [class.invalido]="esInvalido('correo')" />
+        @if (esInvalido('correo')) { <span class="error-texto">Ingresá un correo válido.</span> }
+      </div>
+
+      <div class="form-grupo">
+        <label for="nombreUsuario">Nombre de usuario</label>
+        <input id="nombreUsuario" type="text" formControlName="nombreUsuario"
+               [class.invalido]="esInvalido('nombreUsuario')" />
+        @if (usuarioBloqueado()) {
+          <span class="ayuda-texto">
+            🔒 Solo se puede cambiar una vez cada 15 días. Vas a poder cambiarlo en
+            {{ diasParaCambiarUsuario() }} día(s).
+          </span>
+        } @else if (esInvalido('nombreUsuario')) {
+          <span class="error-texto">Debe tener al menos 3 caracteres.</span>
         } @else {
-          <span>{{ inicial() }}</span>
+          <span class="ayuda-texto">Una vez que lo cambies, no vas a poder volver a cambiarlo por 15 días.</span>
         }
       </div>
-      <div class="perfil-titulo">
-        <h1>{{ u.nombre }} {{ u.apellido }}</h1>
-        <p class="usuario">&#64;{{ u.nombreUsuario }}</p>
-        <span class="badge" [class.admin]="u.perfil === 'administrador'">{{ u.perfil }}</span>
-      </div>
-    </div>
 
-    @if (u.descripcion) {
-      <p class="perfil-descripcion">{{ u.descripcion }}</p>
-    }
+      <div class="form-grupo">
+        <label for="fechaNacimiento">Fecha de nacimiento</label>
+        <input id="fechaNacimiento" type="date" formControlName="fechaNacimiento"
+               [class.invalido]="esInvalido('fechaNacimiento')" />
+        @if (esInvalido('fechaNacimiento')) { <span class="error-texto">Indicá tu fecha de nacimiento.</span> }
+      </div>
 
-    <div class="perfil-datos">
-      <div class="dato">
-        <span class="dato-label">Correo</span>
-        <span class="dato-valor">{{ u.correo }}</span>
+      <div class="form-grupo">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" rows="3" formControlName="descripcion"
+                  placeholder="Contanos algo sobre vos..."></textarea>
+        @if (esInvalido('descripcion')) { <span class="error-texto">Máximo 300 caracteres.</span> }
       </div>
-      <div class="dato">
-        <span class="dato-label">Fecha de nacimiento</span>
-        <span class="dato-valor">{{ u.fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
+
+      <div class="flex editar-acciones">
+        <button type="submit" class="btn btn-primary" [disabled]="guardando()">
+          @if (guardando()) { <span class="spinner"></span> Guardando... } @else { Guardar cambios }
+        </button>
+        <button type="button" class="btn btn-secundario" (click)="cancelar()" [disabled]="guardando()">
+          Cancelar
+        </button>
       </div>
-      <div class="dato">
-        <span class="dato-label">Miembro desde</span>
-        <span class="dato-valor">{{ u.createdAt | date: 'dd/MM/yyyy' }}</span>
-      </div>
-    </div>
-  </div>
+    </form>
+  }
 
   <!-- Últimas 3 publicaciones del usuario -->
   <div class="card mis-pubs">

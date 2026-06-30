@@ -3,6 +3,7 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  Patch,
   Post,
   UploadedFile,
   UseGuards,
@@ -12,6 +13,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthService } from './auth.service';
 import { RegistroDto } from './dto/registro.dto';
 import { LoginDto } from './dto/login.dto';
+import { EditarPerfilDto } from './dto/editar-perfil.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { UsuarioToken } from './usuario-token.decorator';
 import type { JwtPayload } from './jwt-payload.interface';
@@ -39,6 +41,24 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
+  }
+
+  // PATCH /auth/perfil -> 200. Actualiza los datos del usuario logueado
+  // (incluida la foto, que llega como archivo). Devuelve el usuario y un token nuevo.
+  @Patch('perfil')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(
+    FileInterceptor('fotoPerfil', {
+      limits: { fileSize: 5 * 1024 * 1024 }, // máximo 5 MB
+    }),
+  )
+  actualizarPerfil(
+    @UsuarioToken('sub') usuarioId: string,
+    @Body() dto: EditarPerfilDto,
+    @UploadedFile() fotoPerfil?: Express.Multer.File,
+  ) {
+    return this.authService.actualizarPerfil(usuarioId, dto, fotoPerfil);
   }
 
   // POST /auth/autorizar -> 200 si el token es válido (401 si no, lo lanza el guard).

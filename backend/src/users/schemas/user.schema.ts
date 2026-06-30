@@ -35,6 +35,18 @@ export class User {
 
   @Prop({ default: false })
   eliminado: boolean; // baja lógica (se utiliza desde el Sprint 4)
+
+  // Identificador de la sesión activa. Cada login genera uno nuevo; el guard
+  // exige que el token traiga este mismo valor. Así una cuenta solo puede
+  // estar usada en un dispositivo a la vez (al loguearse en otro, el anterior
+  // queda invalidado).
+  @Prop({ default: '' })
+  sid: string;
+
+  // Última vez que el usuario cambió su nombre de usuario. Se usa para
+  // permitir el cambio solo una vez cada 15 días.
+  @Prop({ type: Date, default: null })
+  nombreUsuarioActualizadoEn: Date | null;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -46,6 +58,7 @@ UserSchema.set('toJSON', {
   transform: (_doc, ret: Record<string, any>) => {
     delete ret.password;
     delete ret.__v;
+    delete ret.sid; // dato interno de sesión, no se expone
     return ret;
   },
 });

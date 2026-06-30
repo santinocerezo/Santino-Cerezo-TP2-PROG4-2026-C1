@@ -22,7 +22,7 @@
   overflow: hidden;
   display: grid;
   place-items: center;
-  background: #fff;
+  background: var(--superficie-2);
   border: 2px solid var(--borde);
   color: var(--texto-suave);
   font-size: 0.75rem;

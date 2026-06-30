@@ -33,6 +33,13 @@ export class AuthService {
       .pipe(tap((resp) => this.guardarSesion(resp)));
   }
 
+  /** Actualiza el perfil (multipart: puede incluir una foto nueva). */
+  actualizarPerfil(datos: FormData): Observable<RespuestaAuth> {
+    return this.http
+      .patch<RespuestaAuth>(`${this.apiUrl}/perfil`, datos)
+      .pipe(tap((resp) => this.guardarSesion(resp)));
+  }
+
   /** Valida el token guardado contra el backend y refresca los datos del usuario. */
   autorizar(): Observable<{ usuario: Usuario }> {
     return this.http

@@ -27,7 +27,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401 && !esRutaAuth) {
         auth.logout();
-        noti.info('Tu sesión expiró. Volvé a iniciar sesión.');
+        // Usamos el motivo que mande el backend (p. ej. "se inició sesión en
+        // otro dispositivo"); si no hay, mostramos el genérico de vencimiento.
+        const motivo = error.error?.message;
+        noti.info(
+          typeof motivo === 'string' && motivo
+            ? motivo
+            : 'Tu sesión expiró. Volvé a iniciar sesión.',
+        );
         router.navigate(['/login']);
       }
       return throwError(() => error);

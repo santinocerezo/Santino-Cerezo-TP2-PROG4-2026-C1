@@ -7,4 +7,5 @@ export interface JwtPayload {
   correo: string;
   nombreUsuario: string;
   perfil: Perfil;
+  sid: string; // id de la sesión activa (sesión única por cuenta)
 }

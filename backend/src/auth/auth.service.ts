@@ -5,16 +5,23 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { randomUUID } from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { UserDocument } from '../users/schemas/user.schema';
 import { RegistroDto } from './dto/registro.dto';
 import { LoginDto } from './dto/login.dto';
+import { EditarPerfilDto } from './dto/editar-perfil.dto';
 import { JwtPayload } from './jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
+  // El nombre de usuario solo se puede cambiar una vez cada 15 días.
+  private readonly DIAS_COOLDOWN_USUARIO = 15;
+  private readonly MS_COOLDOWN_USUARIO =
+    this.DIAS_COOLDOWN_USUARIO * 24 * 60 * 60 * 1000;
+
   constructor(
     private readonly usersService: UsersService,
     private readonly cloudinary: CloudinaryService,
@@ -48,6 +55,7 @@ export class AuthService {
     const passwordHash = await bcrypt.hash(dto.password, 10);
 
     // 5) Guardamos el usuario. El perfil por defecto es "usuario".
+    // Generamos un sid para la sesión que abre el registro.
     const usuario = await this.usersService.crear({
       nombre: dto.nombre,
       apellido: dto.apellido,
@@ -58,6 +66,7 @@ export class AuthService {
       descripcion: dto.descripcion ?? '',
       fotoPerfil,
       perfil: 'usuario',
+      sid: randomUUID(),
     });
 
     // El toJSON del schema quita la contraseña automáticamente.
@@ -88,9 +97,94 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
+    // Nueva sesión: rotamos el sid. Cualquier otra sesión abierta de esta
+    // cuenta (otro dispositivo) queda invalidada en el guard.
+    usuario.sid = randomUUID();
+    await usuario.save();
+
     return {
       mensaje: 'Login correcto',
       usuario,
+      token: this.firmarToken(usuario),
+    };
+  }
+
+  // PATCH /auth/perfil: actualiza los datos del usuario logueado.
+  // Reglas: correo y nombre de usuario únicos; el nombre de usuario solo se
+  // puede cambiar una vez cada 15 días. Si se manda una imagen, reemplaza la
+  // foto de perfil (se sube a Cloudinary). Devuelve el usuario y un token
+  // nuevo (porque el correo/usuario viajan dentro del JWT).
+  async actualizarPerfil(
+    usuarioId: string,
+    dto: EditarPerfilDto,
+    foto?: Express.Multer.File,
+  ) {
+    const usuario = await this.usersService.buscarPorId(usuarioId);
+    if (!usuario || usuario.eliminado) {
+      throw new UnauthorizedException('La sesión ya no es válida');
+    }
+
+    // --- Correo (único) ---
+    if (dto.correo) {
+      const nuevoCorreo = dto.correo.toLowerCase();
+      if (nuevoCorreo !== usuario.correo) {
+        const existe = await this.usersService.buscarPorCorreo(nuevoCorreo);
+        if (existe && existe.id !== usuario.id) {
+          throw new ConflictException('Ya existe un usuario con ese correo');
+        }
+        usuario.correo = nuevoCorreo;
+      }
+    }
+
+    // --- Nombre de usuario (único + 1 cambio cada 15 días) ---
+    if (dto.nombreUsuario && dto.nombreUsuario !== usuario.nombreUsuario) {
+      const ultimo = usuario.nombreUsuarioActualizadoEn;
+      if (ultimo) {
+        const transcurrido = Date.now() - new Date(ultimo).getTime();
+        if (transcurrido < this.MS_COOLDOWN_USUARIO) {
+          const faltan = Math.ceil(
+            (this.MS_COOLDOWN_USUARIO - transcurrido) / (24 * 60 * 60 * 1000),
+          );
+          throw new BadRequestException(
+            `Solo podés cambiar tu nombre de usuario una vez cada ${this.DIAS_COOLDOWN_USUARIO} días. Probá de nuevo en ${faltan} día(s).`,
+          );
+        }
+      }
+      const existe = await this.usersService.buscarPorNombreUsuario(
+        dto.nombreUsuario,
+      );
+      if (existe && existe.id !== usuario.id) {
+        throw new ConflictException('Ese nombre de usuario ya está en uso');
+      }
+      usuario.nombreUsuario = dto.nombreUsuario;
+      usuario.nombreUsuarioActualizadoEn = new Date();
+    }
+
+    // --- Resto de campos editables libremente ---
+    if (dto.nombre) usuario.nombre = dto.nombre;
+    if (dto.apellido) usuario.apellido = dto.apellido;
+    if (dto.descripcion !== undefined) usuario.descripcion = dto.descripcion;
+    if (dto.fechaNacimiento) {
+      usuario.fechaNacimiento = new Date(dto.fechaNacimiento);
+    }
+
+    // --- Foto de perfil (opcional) ---
+    if (foto) {
+      if (!foto.mimetype?.startsWith('image/')) {
+        throw new BadRequestException('El archivo de perfil debe ser una imagen');
+      }
+      usuario.fotoPerfil = await this.cloudinary.subirImagen(
+        foto,
+        'red-social/perfiles',
+      );
+    }
+
+    await usuario.save();
+
+    return {
+      mensaje: 'Perfil actualizado correctamente',
+      usuario,
+      // Reemitimos el token: el correo y el usuario viajan dentro del JWT.
       token: this.firmarToken(usuario),
     };
   }
@@ -108,22 +202,25 @@ export class AuthService {
   // POST /auth/refrescar: el guard ya validó el token. Emitimos uno nuevo
   // con la misma información y otros 15 minutos de vigencia.
   refrescar(payload: JwtPayload) {
+    // Mantenemos el mismo sid: refrescar no abre una sesión nueva.
     const nuevo = this.jwt.sign({
       sub: payload.sub,
       correo: payload.correo,
       nombreUsuario: payload.nombreUsuario,
       perfil: payload.perfil,
+      sid: payload.sid,
     } satisfies JwtPayload);
     return { token: nuevo };
   }
 
-  // Firma un token con la identidad y el rol del usuario.
+  // Firma un token con la identidad, el rol y la sesión del usuario.
   private firmarToken(usuario: UserDocument): string {
     const payload: JwtPayload = {
       sub: usuario.id as string,
       correo: usuario.correo,
       nombreUsuario: usuario.nombreUsuario,
       perfil: usuario.perfil,
+      sid: usuario.sid,
     };
     return this.jwt.sign(payload);
   }
