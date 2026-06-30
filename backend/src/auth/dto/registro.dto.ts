@@ -8,19 +8,25 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { Trim } from '../../common/decorators/trim.decorator';
+import { EsEdadValida } from '../../common/validators/edad.validator';
 
 export class RegistroDto {
+  @Trim()
   @IsString()
   @IsNotEmpty({ message: 'El nombre es obligatorio' })
   nombre: string;
 
+  @Trim()
   @IsString()
   @IsNotEmpty({ message: 'El apellido es obligatorio' })
   apellido: string;
 
+  @Trim()
   @IsEmail({}, { message: 'El correo no es válido' })
   correo: string;
 
+  @Trim()
   @IsString()
   @IsNotEmpty({ message: 'El nombre de usuario es obligatorio' })
   @MinLength(3, { message: 'El nombre de usuario debe tener al menos 3 caracteres' })
@@ -40,6 +46,7 @@ export class RegistroDto {
 
   // Llega como string 'AAAA-MM-DD' desde el formulario.
   @IsDateString({}, { message: 'La fecha de nacimiento no es válida' })
+  @EsEdadValida({ message: 'Tenés que tener entre 13 y 120 años' })
   fechaNacimiento: string;
 
   @IsOptional()

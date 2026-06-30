@@ -69,8 +69,15 @@
 
       <div class="form-grupo">
         <label for="fechaNacimiento">Fecha de nacimiento</label>
-        <input id="fechaNacimiento" type="date" formControlName="fechaNacimiento" [class.invalido]="esInvalido('fechaNacimiento')" />
-        @if (esInvalido('fechaNacimiento')) { <span class="error-texto">Indicá tu fecha de nacimiento.</span> }
+        <input id="fechaNacimiento" type="date" formControlName="fechaNacimiento"
+               [min]="minFechaNac" [max]="maxFechaNac" [class.invalido]="esInvalido('fechaNacimiento')" />
+        @if (esInvalido('fechaNacimiento')) {
+          @if (form.controls.fechaNacimiento.hasError('required')) {
+            <span class="error-texto">Indicá tu fecha de nacimiento.</span>
+          } @else {
+            <span class="error-texto">Tenés que tener entre 13 y 120 años.</span>
+          }
+        }
       </div>
 
       <div class="form-grupo">

@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { MongoExceptionFilter } from './common/filters/mongo-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +20,10 @@ async function bootstrap() {
       transform: true, // convierte tipos (string -> Date/number, etc.)
     }),
   );
+
+  // Traduce los errores de Mongoose (validación / cast) a respuestas 400
+  // claras en español, en vez de un 500 "Internal server error".
+  app.useGlobalFilters(new MongoExceptionFilter());
 
   const port = process.env.PORT ?? 3000;
   await app.listen(port);

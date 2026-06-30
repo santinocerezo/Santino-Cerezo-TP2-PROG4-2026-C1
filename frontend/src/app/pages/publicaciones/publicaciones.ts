@@ -122,7 +122,7 @@ export class Publicaciones implements OnInit {
     const fd = new FormData();
     fd.append('titulo', v.titulo);
     fd.append('descripcion', v.descripcion);
-    fd.append('autor', yo._id);
+    // El autor lo toma el backend del token (JWT), ya no se envía.
     const f = this.archivo();
     if (f) fd.append('imagen', f);
 
@@ -153,8 +153,8 @@ export class Publicaciones implements OnInit {
       return;
     }
     const obs = pub.meGusta.includes(yo._id)
-      ? this.pubService.quitarMeGusta(pub._id, yo._id)
-      : this.pubService.darMeGusta(pub._id, yo._id);
+      ? this.pubService.quitarMeGusta(pub._id)
+      : this.pubService.darMeGusta(pub._id);
 
     obs.subscribe({
       next: (actualizada) => {
@@ -170,7 +170,7 @@ export class Publicaciones implements OnInit {
     const yo = this.auth.usuario();
     if (!yo) return;
     this.noti.confirmar('¿Seguro que querés eliminar esta publicación?', () => {
-      this.pubService.eliminar(pub._id, yo._id).subscribe({
+      this.pubService.eliminar(pub._id).subscribe({
         next: () => {
           this.publicaciones.update((arr) => arr.filter((p) => p._id !== pub._id));
           this.total.update((t) => Math.max(0, t - 1));

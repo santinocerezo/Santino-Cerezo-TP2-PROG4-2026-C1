@@ -13,6 +13,8 @@ export interface Usuario {
   fotoPerfil: string;
   perfil: Perfil;
   eliminado: boolean;
+  // Última vez que cambió el nombre de usuario (para el cooldown de 15 días).
+  nombreUsuarioActualizadoEn?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -21,4 +23,5 @@ export interface Usuario {
 export interface RespuestaAuth {
   mensaje: string;
   usuario: Usuario;
+  token: string; // JWT (Sprint 3)
 }

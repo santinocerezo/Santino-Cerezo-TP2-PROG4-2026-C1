@@ -36,7 +36,7 @@ label.btn { cursor: pointer; width: fit-content; }
 }
 .toolbar h2 { font-size: 1.3rem; margin: 0; }
 
-.orden { display: flex; gap: 0.4rem; background: #fff; border: 1px solid var(--borde); border-radius: 999px; padding: 3px; }
+.orden { display: flex; gap: 0.4rem; background: var(--superficie); border: 1px solid var(--borde); border-radius: 999px; padding: 3px; }
 .orden-btn {
   border: none;
   background: transparent;
@@ -60,7 +60,7 @@ label.btn { cursor: pointer; width: fit-content; }
   gap: 0.5rem;
 }
 
-.spinner-osc { border-color: #cbd5e1; border-top-color: var(--primario); }
+.spinner-osc { border-color: var(--borde); border-top-color: var(--primario); }
 
 .paginacion {
   display: flex;

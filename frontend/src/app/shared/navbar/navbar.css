@@ -2,7 +2,7 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(13, 13, 20, 0.8);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--borde);
 }
@@ -48,8 +48,8 @@
   transition: background var(--trans), color var(--trans);
 }
 
-.links a:hover { background: var(--primario-claro); color: var(--primario-osc); }
-.links a.activo { background: var(--primario-claro); color: var(--primario-osc); }
+.links a:hover { background: var(--primario-claro); color: var(--primario); }
+.links a.activo { background: var(--primario-claro); color: var(--primario); }
 
 .acciones {
   display: flex;
@@ -59,6 +59,20 @@
 
 .btn-sm { padding: 0.5rem 0.9rem; font-size: 0.85rem; }
 
+.sesion-contador {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  color: var(--texto-suave);
+  font-weight: 700;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
 .usuario-chip {
   display: flex;
   align-items: center;
@@ -66,10 +80,11 @@
   padding: 0.25rem 0.7rem 0.25rem 0.25rem;
   border-radius: 999px;
   background: var(--primario-claro);
-  color: var(--primario-osc);
+  color: var(--avatar-ini);
   font-weight: 600;
   font-size: 0.88rem;
   text-decoration: none;
+  border: 1px solid var(--borde);
 }
 
 .usuario-chip img,
@@ -78,13 +93,13 @@
   height: 30px;
   border-radius: 50%;
   object-fit: cover;
+  background: var(--avatar-bg);
 }
 
 .avatar-iniciales {
   display: grid;
   place-items: center;
-  background: var(--primario);
-  color: #fff;
+  color: var(--avatar-ini);
   font-size: 0.8rem;
 }
 
