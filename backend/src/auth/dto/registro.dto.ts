@@ -9,6 +9,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { Trim } from '../../common/decorators/trim.decorator';
+import { EsEdadValida } from '../../common/validators/edad.validator';
 
 export class RegistroDto {
   @Trim()
@@ -45,6 +46,7 @@ export class RegistroDto {
 
   // Llega como string 'AAAA-MM-DD' desde el formulario.
   @IsDateString({}, { message: 'La fecha de nacimiento no es válida' })
+  @EsEdadValida({ message: 'Tenés que tener entre 13 y 120 años' })
   fechaNacimiento: string;
 
   @IsOptional()

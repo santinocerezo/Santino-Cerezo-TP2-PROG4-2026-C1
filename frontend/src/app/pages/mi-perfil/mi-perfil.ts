@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { NotificacionService } from '../../services/notificacion.service';
 import { PublicacionesService } from '../../services/publicaciones.service';
 import { Publicacion } from '../../models/publicacion.model';
+import { edadEntre13y120, fechaHaceAnios } from '../../shared/edad.validator';
 
 const DIAS_COOLDOWN_USUARIO = 15;
 const MS_DIA = 24 * 60 * 60 * 1000;
@@ -31,12 +32,16 @@ export class MiPerfil implements OnInit {
   protected readonly archivo = signal<File | null>(null);
   protected readonly preview = signal<string | null>(null);
 
+  // Límites para el input date: entre 120 y 13 años atrás.
+  protected readonly minFechaNac = fechaHaceAnios(120);
+  protected readonly maxFechaNac = fechaHaceAnios(13);
+
   protected readonly form = this.fb.nonNullable.group({
     nombre: ['', [Validators.required]],
     apellido: ['', [Validators.required]],
     correo: ['', [Validators.required, Validators.email]],
     nombreUsuario: ['', [Validators.required, Validators.minLength(3)]],
-    fechaNacimiento: ['', [Validators.required]],
+    fechaNacimiento: ['', [Validators.required, edadEntre13y120]],
     descripcion: ['', [Validators.maxLength(300)]],
   });
 

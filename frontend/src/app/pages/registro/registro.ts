@@ -9,6 +9,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NotificacionService } from '../../services/notificacion.service';
+import { edadEntre13y120, fechaHaceAnios } from '../../shared/edad.validator';
 
 // Validador a nivel grupo: la contraseña y su repetición deben coincidir.
 function passwordsCoinciden(group: AbstractControl): ValidationErrors | null {
@@ -33,6 +34,10 @@ export class Registro {
   protected readonly archivo = signal<File | null>(null);
   protected readonly preview = signal<string | null>(null);
 
+  // Límites para el input date: entre 120 y 13 años atrás.
+  protected readonly minFechaNac = fechaHaceAnios(120);
+  protected readonly maxFechaNac = fechaHaceAnios(13);
+
   protected readonly form = this.fb.nonNullable.group(
     {
       nombre: ['', [Validators.required]],
@@ -48,7 +53,7 @@ export class Registro {
         ],
       ],
       repetirPassword: ['', [Validators.required]],
-      fechaNacimiento: ['', [Validators.required]],
+      fechaNacimiento: ['', [Validators.required, edadEntre13y120]],
       descripcion: ['', [Validators.maxLength(300)]],
     },
     { validators: passwordsCoinciden },

@@ -8,6 +8,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { Trim } from '../../common/decorators/trim.decorator';
+import { EsEdadValida } from '../../common/validators/edad.validator';
 
 /**
  * Edición del perfil. Todos los campos son opcionales: se actualiza solo lo
@@ -42,6 +43,7 @@ export class EditarPerfilDto {
 
   @IsOptional()
   @IsDateString({}, { message: 'La fecha de nacimiento no es válida' })
+  @EsEdadValida({ message: 'Tenés que tener entre 13 y 120 años' })
   fechaNacimiento?: string;
 
   @IsOptional()
