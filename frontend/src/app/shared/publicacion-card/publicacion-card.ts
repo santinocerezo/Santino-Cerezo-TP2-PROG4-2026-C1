@@ -3,10 +3,12 @@ import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Publicacion } from '../../models/publicacion.model';
+import { TruncarPipe } from '../pipes/truncar.pipe';
+import { TiempoRelativoPipe } from '../pipes/tiempo-relativo.pipe';
 
 @Component({
   selector: 'app-publicacion-card',
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, TruncarPipe, TiempoRelativoPipe],
   templateUrl: './publicacion-card.html',
   styleUrl: './publicacion-card.css',
 })

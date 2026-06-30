@@ -1,0 +1,62 @@
+<!-- Filtros de rango de fechas -->
+<section class="card filtros">
+  <form [formGroup]="form" (ngSubmit)="aplicar()" class="filtros-form">
+    <div class="form-grupo">
+      <label for="desde">Desde</label>
+      <input id="desde" type="date" formControlName="desde" />
+    </div>
+    <div class="form-grupo">
+      <label for="hasta">Hasta</label>
+      <input id="hasta" type="date" formControlName="hasta" />
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-sm" [disabled]="cargando()">
+      @if (cargando()) { <span class="spinner"></span> Cargando... } @else { Aplicar }
+    </button>
+
+    <!-- Rango rápido: desplegable que se cierra al clickear afuera (directiva propia). -->
+    <div class="rango-rapido" appClickAfuera (clickAfuera)="menuAbierto.set(false)">
+      <button type="button" class="btn btn-secundario btn-sm" (click)="menuAbierto.set(!menuAbierto())">
+        Rango rápido ▾
+      </button>
+      @if (menuAbierto()) {
+        <ul class="menu">
+          <li><button type="button" (click)="rangoRapido(7)">Últimos 7 días</button></li>
+          <li><button type="button" (click)="rangoRapido(30)">Últimos 30 días</button></li>
+          <li><button type="button" (click)="rangoRapido(90)">Últimos 90 días</button></li>
+          <li><button type="button" (click)="rangoRapido('todo')">Todo el historial</button></li>
+        </ul>
+      }
+    </div>
+  </form>
+</section>
+
+<!-- Gráficos -->
+<div class="grilla-graficos">
+  <section class="card grafico">
+    <h3>Publicaciones por usuario</h3>
+    <p class="ayuda-texto">Cantidad de publicaciones de cada usuario en el rango elegido.</p>
+    <div class="lienzo">
+      <canvas #canvasBarras></canvas>
+      @if (!hayBarras()) { <p class="sin-datos">Sin datos en este rango.</p> }
+    </div>
+  </section>
+
+  <section class="card grafico">
+    <h3>Comentarios por día</h3>
+    <p class="ayuda-texto">Cantidad de comentarios realizados cada día en el rango elegido.</p>
+    <div class="lienzo">
+      <canvas #canvasLineas></canvas>
+      @if (!hayLineas()) { <p class="sin-datos">Sin datos en este rango.</p> }
+    </div>
+  </section>
+
+  <section class="card grafico grafico-ancho">
+    <h3>Comentarios por publicación</h3>
+    <p class="ayuda-texto">Las 10 publicaciones más comentadas en el rango elegido.</p>
+    <div class="lienzo">
+      <canvas #canvasTorta></canvas>
+      @if (!hayTorta()) { <p class="sin-datos">Sin datos en este rango.</p> }
+    </div>
+  </section>
+</div>

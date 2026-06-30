@@ -1,0 +1,127 @@
+.usuarios-top {
+  margin-bottom: 0.5rem;
+  gap: 1rem;
+}
+
+/* ---------- Formulario de alta ---------- */
+.form-alta {
+  border: 1px dashed var(--borde);
+  border-radius: var(--radio);
+  padding: 1.25rem;
+  margin: 1rem 0 1.5rem;
+  background: var(--superficie-2);
+}
+
+.radios {
+  display: flex;
+  gap: 1.25rem;
+  padding-top: 0.35rem;
+}
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.radio input { width: auto; }
+
+.preview-foto {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-top: 0.6rem;
+  border: 1px solid var(--borde);
+}
+
+/* ---------- Tabla ---------- */
+.tabla-scroll { overflow-x: auto; }
+
+.tabla-usuarios {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 720px;
+}
+
+.tabla-usuarios th,
+.tabla-usuarios td {
+  text-align: left;
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--borde);
+  vertical-align: middle;
+}
+
+.tabla-usuarios th {
+  color: var(--texto-suave);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tabla-usuarios tbody tr:hover { background: var(--superficie-2); }
+.tabla-usuarios tr.fila-baja { opacity: 0.55; }
+
+.celda-usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.avatar-mini {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: var(--avatar-bg);
+  color: var(--avatar-ini);
+  font-size: 0.8rem;
+  font-weight: 700;
+  overflow: hidden;
+}
+.avatar-mini img { width: 100%; height: 100%; object-fit: cover; }
+
+.celda-usuario-texto { display: flex; flex-direction: column; }
+.nombre-completo { font-weight: 600; }
+.arroba { color: var(--texto-suave); font-size: 0.82rem; }
+.correo { color: var(--texto-suave); }
+.registrado { color: var(--texto-suave); font-size: 0.82rem; }
+
+.estado-pill {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.estado-pill.alta { background: rgba(34, 197, 94, 0.16); color: #86efac; }
+.estado-pill.baja { background: rgba(248, 113, 113, 0.16); color: #fca5a5; }
+
+.col-acciones { text-align: right; white-space: nowrap; }
+
+/* Botón de acción destructiva (deshabilitar). */
+.btn-peligro {
+  background: rgba(248, 113, 113, 0.14);
+  color: #fca5a5;
+  border: 1.5px solid rgba(248, 113, 113, 0.35);
+}
+.btn-peligro:not(:disabled):hover { background: rgba(248, 113, 113, 0.24); color: #fecaca; }
+
+/* Spinner oscuro (sobre fondo claro de card). */
+.spinner-osc {
+  border-color: rgba(139, 92, 246, 0.35);
+  border-top-color: var(--primario);
+}
+
+.estado {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--texto-suave);
+  padding: 1rem 0;
+}

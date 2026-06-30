@@ -5,7 +5,11 @@ import { Registro } from './pages/registro/registro';
 import { Publicaciones } from './pages/publicaciones/publicaciones';
 import { PublicacionDetalle } from './pages/publicacion-detalle/publicacion-detalle';
 import { MiPerfil } from './pages/mi-perfil/mi-perfil';
+import { Dashboard } from './pages/dashboard/dashboard';
+import { DashboardUsuarios } from './pages/dashboard/usuarios/usuarios';
+import { DashboardEstadisticas } from './pages/dashboard/estadisticas/estadisticas';
 import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
 
 // Sprint 3: la raíz es una pantalla de carga que valida el token y redirige.
 // Las pantallas internas quedan protegidas por authGuard (solo logueados).
@@ -30,6 +34,21 @@ export const routes: Routes = [
     component: MiPerfil,
     title: 'Mi perfil',
     canActivate: [authGuard],
+  },
+  // Sprint 4: panel de administración. Solo logueados Y administradores.
+  {
+    path: 'dashboard',
+    component: Dashboard,
+    canActivate: [authGuard, adminGuard],
+    children: [
+      { path: '', redirectTo: 'usuarios', pathMatch: 'full' },
+      { path: 'usuarios', component: DashboardUsuarios, title: 'Usuarios' },
+      {
+        path: 'estadisticas',
+        component: DashboardEstadisticas,
+        title: 'Estadísticas',
+      },
+    ],
   },
   { path: '**', redirectTo: '' },
 ];

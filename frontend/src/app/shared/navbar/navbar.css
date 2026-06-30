@@ -51,6 +51,11 @@
 .links a:hover { background: var(--primario-claro); color: var(--primario); }
 .links a.activo { background: var(--primario-claro); color: var(--primario); }
 
+/* Link exclusivo de administradores (resaltado con el color de acento). */
+.links a.link-admin { color: var(--acento); }
+.links a.link-admin:hover,
+.links a.link-admin.activo { background: rgba(236, 72, 153, 0.14); color: #f9a8d4; }
+
 .acciones {
   display: flex;
   align-items: center;

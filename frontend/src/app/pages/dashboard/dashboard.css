@@ -1,0 +1,25 @@
+.dash-header {
+  margin-bottom: 1.25rem;
+}
+
+.dash-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--borde);
+  padding-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.dash-tabs a {
+  padding: 0.55rem 1.1rem;
+  border-radius: 10px;
+  color: var(--texto-suave);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: background var(--trans), color var(--trans);
+}
+
+.dash-tabs a:hover { background: var(--superficie-2); color: var(--texto); }
+.dash-tabs a.activo { background: var(--primario-claro); color: var(--primario); }

@@ -4,6 +4,8 @@ import { PublicacionesController } from './publicaciones.controller';
 import { PublicacionesService } from './publicaciones.service';
 import { ComentariosController } from './comentarios.controller';
 import { ComentariosService } from './comentarios.service';
+import { EstadisticasController } from './estadisticas.controller';
+import { EstadisticasService } from './estadisticas.service';
 import {
   Publicacion,
   PublicacionSchema,
@@ -23,8 +25,12 @@ import { AuthModule } from '../auth/auth.module';
     CloudinaryModule, // para subir la imagen de la publicación
     AuthModule, // para proteger las rutas con el guard JWT (Sprint 3)
   ],
-  controllers: [PublicacionesController, ComentariosController],
-  providers: [PublicacionesService, ComentariosService],
+  controllers: [
+    PublicacionesController,
+    ComentariosController,
+    EstadisticasController,
+  ],
+  providers: [PublicacionesService, ComentariosService, EstadisticasService],
   exports: [PublicacionesService],
 })
 export class PublicacionesModule {}
