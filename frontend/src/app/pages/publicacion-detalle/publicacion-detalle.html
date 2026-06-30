@@ -106,6 +106,13 @@
         }
       </ul>
 
+      @if (totalComentarios() > 0) {
+        <p class="comentarios-contador">
+          Mostrando {{ comentarios().length }} de {{ totalComentarios() }}
+          {{ totalComentarios() === 1 ? 'comentario' : 'comentarios' }}
+        </p>
+      }
+
       @if (hayMas()) {
         <div class="cargar-mas">
           <button class="btn btn-secundario btn-sm" [disabled]="cargandoComentarios()" (click)="cargarComentarios()">
