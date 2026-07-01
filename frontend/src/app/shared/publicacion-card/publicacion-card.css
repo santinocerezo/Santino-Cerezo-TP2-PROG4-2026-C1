@@ -15,7 +15,7 @@
   margin-bottom: 0.75rem;
 }
 
-.pub-autor { display: flex; align-items: center; gap: 0.7rem; }
+.pub-autor { display: flex; align-items: center; gap: 0.7rem; min-width: 0; }
 
 .autor-avatar {
   width: 42px;
@@ -31,16 +31,17 @@
 }
 .autor-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-.autor-info { display: flex; flex-direction: column; line-height: 1.2; }
-.autor-nombre { font-weight: 700; font-size: 0.95rem; }
-.autor-usuario { color: var(--texto-suave); font-size: 0.82rem; }
+.autor-info { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.autor-nombre { font-weight: 700; font-size: 0.95rem; overflow-wrap: anywhere; }
+.autor-usuario { color: var(--texto-suave); font-size: 0.82rem; overflow-wrap: anywhere; }
 
 .pub-fecha { color: var(--texto-suave); font-size: 0.78rem; white-space: nowrap; }
 
 .pub-titulo-link { text-decoration: none; color: inherit; }
 .pub-titulo-link:hover .pub-titulo { color: var(--primario); }
-.pub-titulo { font-size: 1.15rem; margin: 0 0 0.35rem; transition: color 0.15s ease; }
-.pub-desc { margin: 0 0 0.75rem; color: var(--texto); white-space: pre-wrap; }
+.pub-titulo { font-size: 1.15rem; margin: 0 0 0.35rem; transition: color 0.15s ease; overflow-wrap: anywhere; }
+/* overflow-wrap corta palabras/enlaces largos sin espacios (no desborda). */
+.pub-desc { margin: 0 0 0.75rem; color: var(--texto); white-space: pre-wrap; overflow-wrap: anywhere; }
 
 .pub-img {
   width: 100%;
