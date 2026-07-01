@@ -16,7 +16,7 @@
   margin-bottom: 0.9rem;
 }
 
-.detalle-autor { display: flex; align-items: center; gap: 0.7rem; }
+.detalle-autor { display: flex; align-items: center; gap: 0.7rem; min-width: 0; }
 
 .autor-avatar {
   width: 48px;
@@ -32,14 +32,14 @@
 }
 .autor-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-.autor-info { display: flex; flex-direction: column; line-height: 1.2; }
-.autor-nombre { font-weight: 700; }
-.autor-usuario { color: var(--texto-suave); font-size: 0.85rem; }
+.autor-info { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.autor-nombre { font-weight: 700; overflow-wrap: anywhere; }
+.autor-usuario { color: var(--texto-suave); font-size: 0.85rem; overflow-wrap: anywhere; }
 
 .detalle-fecha { color: var(--texto-suave); font-size: 0.8rem; white-space: nowrap; }
 
-.detalle-titulo { font-size: 1.5rem; margin: 0 0 0.5rem; }
-.detalle-desc { color: var(--texto); white-space: pre-wrap; margin: 0 0 1rem; line-height: 1.55; }
+.detalle-titulo { font-size: 1.5rem; margin: 0 0 0.5rem; overflow-wrap: anywhere; }
+.detalle-desc { color: var(--texto); white-space: pre-wrap; overflow-wrap: anywhere; margin: 0 0 1rem; line-height: 1.55; }
 
 .detalle-img {
   width: 100%;
@@ -111,6 +111,7 @@
 
 .comentario-cuerpo {
   flex: 1;
+  min-width: 0; /* permite que el texto largo se achique en vez de desbordar */
   background: var(--superficie-2);
   border: 1px solid var(--borde);
   border-radius: 12px;
@@ -123,12 +124,21 @@
   align-items: baseline;
   gap: 0.5rem;
   margin-bottom: 0.3rem;
+  min-width: 0;
 }
-.comentario-autor { font-weight: 700; font-size: 0.9rem; }
+.comentario-autor { font-weight: 700; font-size: 0.9rem; overflow-wrap: anywhere; }
 .comentario-fecha { color: var(--texto-suave); font-size: 0.75rem; white-space: nowrap; }
 .editado { font-style: italic; }
 
-.comentario-mensaje { margin: 0; color: var(--texto); white-space: pre-wrap; }
+/* pre-wrap respeta los saltos de línea; overflow-wrap corta palabras/enlaces
+   larguísimos sin espacios para que no se salgan de la pantalla. */
+.comentario-mensaje {
+  margin: 0;
+  color: var(--texto);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
 
 .editar-link {
   margin-top: 0.4rem;
